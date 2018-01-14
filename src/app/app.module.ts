@@ -17,6 +17,7 @@ import { MyApp } from './app.component';
 import { AuthProvider } from '../providers/auth/auth';
 import { EventProvider } from '../providers/event/event';
 import { ProfileProvider } from '../providers/profile/profile';
+import { TaskProvider } from '../providers/task/task';
 
 
 // The translate loader needs to know where to load i18n files
@@ -74,7 +75,8 @@ export function provideSettings(storage: Storage) {
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     AuthProvider,
     EventProvider,
-    ProfileProvider
+    ProfileProvider,
+    TaskProvider
   ]
 })
 export class AppModule { }
