@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Config, Nav, Platform } from 'ionic-angular';
 import { FirstRunPage } from '../pages/pages';
+import { MainPage } from '../pages/pages';
 import { Settings } from '../providers/providers';
 import { BrowsePage} from '../pages/browse/browse';
 import { PostTaskPage} from '../pages/post-task/post-task';
@@ -61,10 +62,10 @@ export class MyApp {
     console.log("I'm alivsdse!");
     const unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        this.rootPage = 'LoginPage';
+        this.rootPage = FirstRunPage;
         unsubscribe();
       } else {
-        this.rootPage = FirstRunPage;
+        this.rootPage = MainPage;
         unsubscribe();
       }
     });
