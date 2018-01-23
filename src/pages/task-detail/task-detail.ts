@@ -29,7 +29,13 @@ export class TaskDetailPage {
     .on("value", taskSnapshot => {
       this.currentTask = taskSnapshot.val();
       this.currentTask.id = taskSnapshot.key;
+      this.currentTask.candidate = taskSnapshot.val().candidate;
     });
   }
 
+  addCandidate(): void {
+    this.taskProvider.addCandidate(
+      this.currentTask.id
+    )
+  }
 }

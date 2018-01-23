@@ -14,12 +14,10 @@
 
 
 <ion-content padding>
-    <ion-card>
-        <ion-card-header>
-          {{currentTask?.name}}
-        </ion-card-header>
-        <ion-card-content>
-          <p>Date: <strong>{{currentTask?.date}}</strong></p>
-        </ion-card-content>
-      </ion-card>
+  <h2>{{currentTask?.name}}</h2>
+  <p>Date: <strong>{{currentTask?.date}}</strong></p>
+  <button ion-button block
+  (click)="addCandidate()">
+  Offer to help
+</button>
 </ion-content>
