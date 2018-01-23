@@ -10,7 +10,7 @@ import { MainPage } from '../pages/pages';
 import { Settings } from '../providers/providers';
 import { BrowsePage} from '../pages/browse/browse';
 import { PostTaskPage} from '../pages/post-task/post-task';
-import { TaskDetailPage} from '../pages/task-detail/task-detail';
+
 
 @Component({
   template: `<ion-menu [content]="content">
@@ -52,8 +52,7 @@ export class MyApp {
     { title: 'Settings', component: 'SettingsPage' },
     { title: 'Search', component: 'SearchPage' },
     { title: 'Browse', component: 'BrowsePage'  },
-    { title: 'Post Task', component: 'PostTaskPage'},
-    { title: 'Task Detail', component: 'TaskDetailPage'}
+    { title: 'Post Task', component: 'PostTaskPage'}
   ]
 
   constructor(private translate: TranslateService, private platform: Platform, settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {

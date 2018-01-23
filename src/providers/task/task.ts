@@ -11,36 +11,45 @@ import firebase from 'firebase';
 export class TaskProvider {
 
   public taskListRef: firebase.database.Reference;
+  public taskCategoryRef: firebase.database.Reference;
 
   constructor() {
     console.log('Hello TaskProvider Provider');
-    firebase.auth().onAuthStateChanged(user => {
-      if(user) {
-        this.taskListRef = firebase
-          .database()
-          .ref(`/userProfile/${user.uid}/taskList`);
-      }
-    })
+    // firebase.auth().onAuthStateChanged(user => {
+    //   if(user) {
+    //     this.currentUser = user;
+      this.taskListRef = firebase.database().ref(`taskList`);
+      this.taskCategoryRef = firebase.database().ref('taskCategory');
+    //   }
+    // })
   }
 
   createTask(
-    taskName: string,
-    taskDate: string,
+    taskName: string, 
+    taskDate: string, 
+    taskCategory: string, 
     taskLocation: string,
-    taskPay: number,
-    taskAssigned: boolean
+    taskDescription: string, 
+    taskBudget: number,
+    // taskPoster: string
   ): firebase.database.ThenableReference {
     return this.taskListRef.push({
       name: taskName,
       date: taskDate,
+      budget: taskBudget ,
+      category: taskCategory,
       location: taskLocation,
-      pay: taskPay ,
-      assign: taskAssigned
+      description: taskDescription,
+      poster: firebase.auth().currentUser.uid
     })
   }
 
   getTaskList(): firebase.database.Reference {
     return this.taskListRef;
+  }
+
+  getTaskCategory(): firebase.database.Reference {
+    return this.taskCategoryRef;
   }
 
   getTaskDetail(taskId:string): firebase.database.Reference {

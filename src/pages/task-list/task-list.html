@@ -13,6 +13,18 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content >
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-list>
+    <ion-item *ngFor="let task of taskList"
+    (click)="goToTaskDetail(task.id)">
+    <h2>{{task?.name}}</h2>
+    <p>Pay: <strong>${{task?.budget}}</strong></p>
+    <p>Date: <strong>{{task?.date}}</strong></p>
+    </ion-item>
+  </ion-list>
+  <ion-fab bottom center>
+    <button ion-fab mini (click)="postTask()"><ion-icon name="add" ></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>

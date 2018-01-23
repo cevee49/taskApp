@@ -14,5 +14,46 @@
 
 
 <ion-content padding>
-
+  <ion-item>
+    <ion-label stacked>Task Name</ion-label>
+    <ion-input [(ngModel)]="taskName" type="text"
+    placeholder="e.g. Paint a bedroom" >
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Category</ion-label>
+    <ion-select [(ngModel)]="taskCategory" >
+        <!-- <ion-item *ngFor="let category of taskCategory"> -->
+          <ion-option value="delivery">delivery</ion-option>
+        <!-- </ion-item> -->
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Description</ion-label>
+    <ion-textarea [(ngModel)]="taskDescription" type="text"
+    placeholder="Describe your task">
+    </ion-textarea>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Location</ion-label>
+    <ion-input (click)="showAddressModal()" [(ngModel)]="address.place" type="text"
+    placeholder="Where is your location?">
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Budget</ion-label>
+    <ion-input [(ngModel)]="taskBudget" type="number"
+    placeholder="What's your budget?">
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Due Date</ion-label>
+    <ion-datetime displayFormat="D MMM, YY" pickerFormat="DD MMM YYYY"
+    [(ngModel)]="taskDate">
+    </ion-datetime>
+  </ion-item>
+  <button ion-button block
+    (click)="createTask(taskName, taskDate, taskCategory, address.place, taskDescription, taskBudget)">
+    Post Task
+  </button>
 </ion-content>
