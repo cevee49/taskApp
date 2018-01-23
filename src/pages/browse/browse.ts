@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { TaskProvider } from "../../providers/task/task";
 
 /**
  * Generated class for the BrowsePage page.
@@ -14,21 +15,35 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'browse.html',
 })
 export class BrowsePage {
+  public taskCategory: Array<any>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(
+    public navCtrl: NavController, 
+    public taskProvider: TaskProvider
+  ) {}
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad BrowsePage');
+    this.taskProvider.getTaskCategory().on("value", taskCategorySnapshot => {
+      this.taskCategory = [];
+      taskCategorySnapshot.forEach(snap => {
+        console.log('ionViewDidLoad Browse category');
+        this.taskCategory.push({
+          id: snap.key,
+          name: snap.val().name,
+          icon: snap.val().icon
+        });
+        return false;
+      });
+    });
   }
 
   postTask(){
     console.log('pressed');
-    this.navCtrl.push('PostTaskPage');
+    this.navCtrl.push('TaskCreatePage');
   }
 
-  searchTask(){
+  browseTask(categoryId){
     console.log('pressed');
-    this.navCtrl.push('SearchPage');
+    this.navCtrl.push('TaskListPage', {categoryId: categoryId});
   }
 }

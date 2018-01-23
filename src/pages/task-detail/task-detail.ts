@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { TaskProvider } from "../../providers/task/task";
 /**
  * Generated class for the TaskDetailPage page.
  *
@@ -14,12 +14,22 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'task-detail.html',
 })
 export class TaskDetailPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  public currentTask: any= {};
+  
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public taskProvider: TaskProvider
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TaskDetailPage');
+    this. taskProvider
+    .getTaskDetail(this.navParams.get("taskId"))
+    .on("value", taskSnapshot => {
+      this.currentTask = taskSnapshot.val();
+      this.currentTask.id = taskSnapshot.key;
+    });
   }
 
 }

@@ -14,5 +14,12 @@
 
 
 <ion-content padding>
-
+    <ion-card>
+        <ion-card-header>
+          {{currentTask?.name}}
+        </ion-card-header>
+        <ion-card-content>
+          <p>Date: <strong>{{currentTask?.date}}</strong></p>
+        </ion-card-content>
+      </ion-card>
 </ion-content>

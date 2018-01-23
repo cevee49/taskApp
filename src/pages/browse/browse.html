@@ -14,16 +14,24 @@
 
 
 <ion-content padding>
-    <ion-list>
-        <button ion-item>
-          <ion-icon name="cart" item-start></ion-icon>
+  
+    <!-- <ion-list>
+        <button ion-item (click)="searchTask()">
+          <ion-icon name="cart" item-start ></ion-icon>
           Shopping
         </button>
-      </ion-list>
-        
-      <ion-fab bottom center>
-          <button ion-fab mini (click)="postTask()"><ion-icon name="add" ></ion-icon>
-          </button>
-     </ion-fab>
+      </ion-list> -->
+  <ion-list>
+    <ion-item *ngFor="let category of taskCategory">
+    <button ion-item (click)="browseTask(category.id)">
+    <ion-icon name={{category?.icon}} item-start ></ion-icon>
+    {{category?.name}}
+    </button>
+    </ion-item>
+  </ion-list>
+  <ion-fab bottom center>
+    <button ion-fab mini (click)="postTask()"><ion-icon name="add" ></ion-icon>
+    </button>
+  </ion-fab>
  
 </ion-content>
