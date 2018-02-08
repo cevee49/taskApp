@@ -14,9 +14,11 @@ export class ProfileProvider {
 
   public userProfile:firebase.database.Reference;
   public currentUser:firebase.User;
+  public profile:firebase.database.Reference;
 
   constructor(public http: Http) {
     console.log('Hello ProfileProvider Provider');
+    this.profile = firebase.database().ref(`/userProfile`);
     firebase.auth().onAuthStateChanged( user => {
       if(user) {
         this.currentUser = user;
@@ -29,6 +31,13 @@ export class ProfileProvider {
     return this.userProfile;
   }
 
+  getCurrentUserID() {
+    return this.currentUser.uid;
+  }
+
+  getOtherProfile(otherId : string): firebase.database.Reference {
+    return this.profile.child(`${otherId}`);
+  }
   updateName(firstName: string, lastName: string): Promise<any> {
     return this.userProfile.update({ firstName, lastName});
   }

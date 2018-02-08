@@ -16,8 +16,27 @@
 <ion-content padding>
   <h2>{{currentTask?.name}}</h2>
   <p>Date: <strong>{{currentTask?.date}}</strong></p>
-  <button ion-button block
-  (click)="addCandidate()">
-  Offer to help
-</button>
+  <div  *ngIf="(userId == currentTask?.poster) && !currentTask?.tasker ">
+    <p>Candidate</p>
+    <ion-list>
+      <ion-item *ngFor="let candidate of candidateList">
+      <h2>{{candidate.id}}</h2>
+      <p>{{candidate?.email}}</p>
+      <button ion-button block
+      (click)="addTasker(candidate.id)">
+      Assign
+      </button>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div  *ngIf="currentTask?.tasker">
+    <p>Tasker</p>
+    <p>{{tasker?.email}}</p>
+  </div>
+  <div  *ngIf="!(userId == this.currentTask.poster)">
+    <button ion-button block
+    (click)="addCandidate()">
+    Make Offer
+    </button>
+  </div>
 </ion-content>

@@ -38,7 +38,7 @@ export class TaskListPage {
           date: snap.val().date,
           category: snap.val().category,
           description: snap.val().description,
-          budget: snap.val().budget
+          budget: snap.val().budget, 
         });
         return false;
       });
