@@ -12,16 +12,19 @@ export class TaskProvider {
 
   public taskListRef: firebase.database.Reference;
   public taskCategoryRef: firebase.database.Reference;
+  public candidateList: firebase.database.Reference;
+  public currentUser:firebase.User;
 
   constructor() {
     console.log('Hello TaskProvider Provider');
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if(user) {
-    //     this.currentUser = user;
-      this.taskListRef = firebase.database().ref(`taskList`);
-      this.taskCategoryRef = firebase.database().ref('taskCategory');
-    //   }
-    // })
+    this.taskListRef = firebase.database().ref(`taskList`);
+    this.taskCategoryRef = firebase.database().ref(`taskCategory`);
+    this.candidateList = firebase.database().ref(`candidateList`);
+    firebase.auth().onAuthStateChanged(user => {
+      if(user) {
+        this.currentUser = user;
+      }
+    })
   }
 
   createTask(
@@ -33,6 +36,7 @@ export class TaskProvider {
     taskBudget: number,
     // taskPoster: string
   ): firebase.database.ThenableReference {
+    const userId: string = firebase.auth().currentUser.uid;
     return this.taskListRef.push({
       name: taskName,
       date: taskDate,
@@ -40,7 +44,7 @@ export class TaskProvider {
       category: taskCategory,
       location: taskLocation,
       description: taskDescription,
-      poster: firebase.auth().currentUser.uid
+      poster: this.currentUser.uid
     })
   }
 
@@ -54,5 +58,11 @@ export class TaskProvider {
 
   getTaskDetail(taskId:string): firebase.database.Reference {
     return this.taskListRef.child(taskId);
+  }
+
+  addCandidate (taskId: string) : PromiseLike<any> {
+    const uid = this.currentUser.uid
+    const candidate = {[uid]: true};
+    return this.taskListRef.child(`${taskId}`).update({candidate})
   }
 }
