@@ -13,7 +13,7 @@ import 'rxjs/add/operator/map';
 export class AuthProvider {
 
   constructor() {
-    console.log('Hello AuthProvider Provider');
+    console.log('Hello AuthProvider Provider'); 
   }
 
   loginUser(email: string, password: string) : Promise<any> {
@@ -48,4 +48,5 @@ export class AuthProvider {
       .off();
     return firebase.auth().signOut();
   }
+
 }

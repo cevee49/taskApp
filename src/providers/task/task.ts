@@ -19,9 +19,10 @@ export class TaskProvider {
     console.log('Hello TaskProvider Provider');
     this.taskListRef = firebase.database().ref(`taskList`);
     this.taskCategoryRef = firebase.database().ref(`taskCategory`);
-    this.candidateList = firebase.database().ref(`candidateList`);
+   
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
+        // this.candidateList = firebase.database().ref(`taskList/${user.uid}/candidate`);
         this.currentUser = user;
       }
     })
@@ -62,7 +63,14 @@ export class TaskProvider {
 
   addCandidate (taskId: string) : PromiseLike<any> {
     const uid = this.currentUser.uid
-    const candidate = {[uid]: true};
-    return this.taskListRef.child(`${taskId}`).update({candidate})
+    return this.taskListRef.child(`${taskId}/candidate`).update({[uid]: true});
+  }
+  
+  getCandidate (taskId: string){
+    return this.taskListRef.child(`${taskId}/candidate`);
+  }
+
+  addTasker (taskId: string, taskerId: string) : PromiseLike<any> {
+    return this.taskListRef.child(`${taskId}`).update({tasker: taskerId})
   }
 }
