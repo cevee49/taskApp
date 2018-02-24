@@ -3,11 +3,12 @@ import {
   Alert,
   AlertController,
   IonicPage,
-  NavController
+  NavController,
+  NavParams
   } from "ionic-angular";
   import { ProfileProvider } from "../../providers/profile/profile";
   import { AuthProvider } from "../../providers/auth/auth";
-
+  import { Camera } from '@ionic-native/camera';
 /**
  * Generated class for the ProfilePage page.
  *
@@ -22,12 +23,15 @@ import {
 })
 export class ProfilePage {
   public userProfile: any;
+  // public profilePic: string= null;
 
   constructor(
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public authProvider: AuthProvider,
-    public profileProvider: ProfileProvider
+    public profileProvider: ProfileProvider,
+    public navParam: NavParams,
+    public cameraPlugin: Camera
     ) {}
 
   ionViewDidLoad() {
@@ -105,5 +109,27 @@ export class ProfilePage {
       ]
     });
     alert.present();
+  }
+
+  takePicture(): void{
+    this.cameraPlugin 
+      .getPicture({
+        quality: 95,
+        destinationType: this.cameraPlugin.DestinationType.DATA_URL,
+        sourceType: this.cameraPlugin.PictureSourceType.CAMERA,
+        allowEdit: true,
+        encodingType: this.cameraPlugin.EncodingType.PNG,
+        targetWidth: 500,
+        targetHeight: 500,
+        saveToPhotoAlbum: true
+      })
+      .then(
+        imageData => {
+          this.userProfile.picture = imageData;
+        },
+        error => {
+          console.log("ERROR -> " + JSON.stringify(error));
+        }
+      );
   }
 }
