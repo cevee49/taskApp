@@ -39,4 +39,10 @@
     Make Offer
     </button>
   </div>
+  <div *ngIf="!(currentTask?.poster == userId)">
+    <button ion-button block
+    (click)="chat(currentTask?.poster, currentTask?.id )">
+    CHAT
+    </button>
+  </div>
 </ion-content>

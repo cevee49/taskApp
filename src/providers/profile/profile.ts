@@ -15,6 +15,7 @@ export class ProfileProvider {
   public userProfile:firebase.database.Reference;
   public currentUser:firebase.User;
   public profile:firebase.database.Reference;
+  public userId;
 
   constructor(public http: Http) {
     console.log('Hello ProfileProvider Provider');
@@ -22,6 +23,7 @@ export class ProfileProvider {
     firebase.auth().onAuthStateChanged( user => {
       if(user) {
         this.currentUser = user;
+        this.userId = firebase.auth().currentUser.uid;
         this.userProfile = firebase.database().ref(`/userProfile/${user.uid}`);
       }
     });
@@ -74,5 +76,18 @@ export class ProfileProvider {
       .catch(error => {
         console.error(error);
       })
+  }
+
+  updatePicture(profilePicture: string): PromiseLike<any> {
+    return firebase
+    .storage()
+    .ref(`userProfile/${this.userId}/profilePicture.png`)
+    .putString(profilePicture, 'base64', { contentType: 'image/png' })
+    .then(savedPicture => {
+      this.userProfile.child(`profilePicture`)
+      .set(savedPicture.downloadURL)
+    })
+    
+
   }
 }

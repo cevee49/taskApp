@@ -75,4 +75,8 @@ export class TaskListPage {
     console.log('pressed');
     this.navCtrl.push('TaskCreatePage');
   }
+
+  openChatlist(){
+    this.navCtrl.push('ChatListPage');
+  }
 }

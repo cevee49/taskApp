@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { TaskProvider } from "../../providers/task/task";
+import { ChatProvider } from "../../providers/chat/chat";
 import { ProfileProvider } from "../../providers/profile/profile";
 import firebase from 'firebase';
 
@@ -26,7 +27,8 @@ export class TaskDetailPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public taskProvider: TaskProvider,
-    public profileProvider: ProfileProvider
+    public profileProvider: ProfileProvider,
+    public chatProvider: ChatProvider
   ) {}
 
   ionViewDidLoad() {
@@ -93,5 +95,10 @@ export class TaskDetailPage {
   goBack() {
     this.navCtrl.pop();
     console.log("bye");
+  }
+
+  chat(buddyId, taskId): void{
+    console.log(taskId);
+    this.navCtrl.push('ChatroomPage', {buddyId: buddyId, taskId: taskId});
   }
 }
