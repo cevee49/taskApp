@@ -22,9 +22,9 @@
   </ion-item>
   <ion-item>
     <ion-label stacked>Category</ion-label>
-    <ion-select [(ngModel)]="taskCategory" >
+    <ion-select [(ngModel)]="taskCat" interface="popover">
         <!-- <ion-item *ngFor="let category of taskCategory"> -->
-          <ion-option value="delivery">delivery</ion-option>
+          <ion-option *ngFor="let category of taskCategory" [value]="category.name">{{category.name}}</ion-option>
         <!-- </ion-item> -->
     </ion-select>
   </ion-item>
@@ -34,16 +34,25 @@
     placeholder="Describe your task">
     </ion-textarea>
   </ion-item>
-  <ion-item>
+    <ion-item>
+      <ion-label>This is an online task</ion-label>
+      <ion-checkbox checked="false" [(ngModel)]="online.checked" ></ion-checkbox>
+    </ion-item>
+  <ion-item *ngIf="!online.checked">
     <ion-label stacked>Location</ion-label>
     <ion-input (click)="showAddressModal()" [(ngModel)]="address.place" type="text"
     placeholder="Where is your location?">
     </ion-input>
   </ion-item>
   <ion-item>
-    <ion-label stacked>Budget</ion-label>
+    <ion-label stacked>Budget (per tasker)</ion-label>
     <ion-input [(ngModel)]="taskBudget" type="number"
     placeholder="What's your budget?">
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>How many Tasker do you need?</ion-label>
+    <ion-input [(ngModel)]="taskerNumber" type="number">
     </ion-input>
   </ion-item>
   <ion-item>
@@ -53,7 +62,7 @@
     </ion-datetime>
   </ion-item>
   <button ion-button block
-    (click)="createTask(taskName, taskDate, taskCategory, address.place, taskDescription, taskBudget)">
+    (click)=" createTask(taskName, taskDate, taskCat,taskDescription, taskBudget, taskerNumber)">
     Post Task
   </button>
 </ion-content>

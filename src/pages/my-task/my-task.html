@@ -1,0 +1,67 @@
+<!--
+  Generated template for the MyTaskPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>myTask</ion-title>
+  </ion-navbar>
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="tasks">
+      <ion-segment-button value="posted">
+        Posted
+      </ion-segment-button>
+      <ion-segment-button value="offered">
+        Offered
+      </ion-segment-button>
+      <!-- <ion-segment-button value="ducklings">
+        Ducklings
+      </ion-segment-button> -->
+    </ion-segment>
+</ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+  <div [ngSwitch]="tasks">
+    <ion-list *ngSwitchCase="'posted'">
+      <ion-item *ngFor="let postedTask of postedTaskList"
+        (click)="goToTaskDetail(postedTask.id)">
+        <ion-avatar item-start>
+          <img [src]="postedTask?.profilePicture" />
+        </ion-avatar>
+        <h2>{{postedTask?.name}}</h2>
+        <p>Pay: <strong>${{postedTask?.budget}}</strong></p>
+        <p>Date: <strong>{{postedTask?.date}}</strong></p>
+        <!-- <div  *ngIf="(task?.tasker == null)">
+          <p>OPEN</p>
+        </div>
+        <div  *ngIf="(task?.tasker != null)">
+          <p>ASSIGNED</p>
+        </div> -->
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'offered'">
+      <ion-item *ngFor="let offeredTask of offeredTaskList"
+        (click)="goToTaskDetail(offeredTask.id)">
+    <ion-avatar item-start>
+      <img [src]="offeredTask?.profilePicture" />
+    </ion-avatar>
+    <h2>{{offeredTask?.name}}</h2>
+    <p>Pay: <strong>${{offeredTask?.budget}}</strong></p>
+    <p>Date: <strong>{{offeredTask?.date}}</strong></p>
+    <!-- <div  *ngIf="(task?.tasker == null)">
+      <p>OPEN</p>
+    </div>
+    <div  *ngIf="(task?.tasker != null)">
+      <p>ASSIGNED</p>
+    </div> -->
+      </ion-item>
+    </ion-list>
+
+</div>
+</ion-content>

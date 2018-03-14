@@ -19,7 +19,9 @@ import { EventProvider } from '../providers/event/event';
 import { ProfileProvider } from '../providers/profile/profile';
 import { TaskProvider } from '../providers/task/task';
 import { ChatProvider } from '../providers/chat/chat';
-
+import { ReviewProvider } from '../providers/review/review';
+import { Ionic2RatingModule } from "ionic2-rating";
+import { LocationProvider } from '../providers/location/location';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -57,7 +59,8 @@ export function provideSettings(storage: Storage) {
       }
     }),
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    Ionic2RatingModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -78,7 +81,9 @@ export function provideSettings(storage: Storage) {
     EventProvider,
     ProfileProvider,
     TaskProvider,
-    ChatProvider
+    ChatProvider,
+    ReviewProvider,
+    LocationProvider,
   ]
 })
 export class AppModule { }

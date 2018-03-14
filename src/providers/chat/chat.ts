@@ -35,18 +35,18 @@ export class ChatProvider {
   }
 
   sendMessage(msg: string, taskId: string, buddyId: string) : Promise<any> {
-    const ts= firebase.database.ServerValue.TIMESTAMP;
-    const roomId ='chat_'+(taskId<this.userId ? taskId+'_'+this.userId : this.userId+'_'+taskId);
+    const ts= Date.now();
+    const roomId ='chat_'+ taskId+'_'+ (buddyId<this.userId ? buddyId+'_'+this.userId : this.userId+'_'+buddyId);
     return this.chatRoomRef.child(`${this.userId}/${roomId}`).update({
       taskId: taskId,
       lastmsg: msg, 
-      timestamp: ts,
+      timestamp: 0- Date.now(),
       buddyId: buddyId
     }).then (() => {
       this.chatRoomRef.child(`${buddyId}/${roomId}`).update({
         taskId: taskId,
         lastmsg: msg, 
-        timestamp: ts,
+        timestamp: 0- Date.now(),
         buddyId: this.userId
       });
     }).then (() => {
@@ -60,10 +60,10 @@ export class ChatProvider {
     })
   }
 
-  getMessages(taskId: string): firebase.database.Reference{
+  getMessages(taskId: string, buddyId: string): firebase.database.Reference{
     console.log(this.userId);
     console.log(taskId);
-    const roomId ='chat_'+taskId+'_'+this.userId;
+    const roomId ='chat_'+ taskId+'_'+ (buddyId<this.userId ? buddyId+'_'+this.userId : this.userId+'_'+buddyId);
     return this.messageRef.child(`${roomId}`);
   }
 

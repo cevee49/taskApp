@@ -31,7 +31,6 @@ export class AutoCompletePage {
     this.autocomplete = {
       query: ''
     };
-    console.log("test1");
   }
 
   dismiss() {
@@ -39,14 +38,12 @@ export class AutoCompletePage {
   }
 
   chooseItem(item: any) {
-    this.viewCtrl.dismiss(item);
+    
     this.geo = item;
     this.geoCode(this.geo);//convert Address to lat and long
-    console.log("test12");
   }
 
   updateSearch() {
-    console.log("test3");
     if (this.autocomplete.query == '') {
       this.autocompleteItems = [];
       return;
@@ -64,12 +61,13 @@ export class AutoCompletePage {
 
   //convert Address string to lat and long
   geoCode(address:any) {
-    console.log("test4");
     let geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'address': address }, (results, status) => {
     this.latitude = results[0].geometry.location.lat();
     this.longitude = results[0].geometry.location.lng();
+    this.viewCtrl.dismiss({address: this.geo, latitude: this.latitude, longitude: this.longitude});
     // alert("lat: " + this.latitude + ", long: " + this.longitude);
+    
    });
  }
 

@@ -23,6 +23,7 @@ export class ProfileProvider {
     firebase.auth().onAuthStateChanged( user => {
       if(user) {
         this.currentUser = user;
+        // this.currentUser.photoURL = user.photoURL;
         this.userId = firebase.auth().currentUser.uid;
         this.userProfile = firebase.database().ref(`/userProfile/${user.uid}`);
       }
@@ -41,6 +42,11 @@ export class ProfileProvider {
     return this.profile.child(`${otherId}`);
   }
   updateName(firstName: string, lastName: string): Promise<any> {
+    var fullName = firstName +` `+ lastName.charAt(0) + `.`;
+    this.currentUser.updateProfile({
+      displayName: fullName,
+      photoURL: this.currentUser.photoURL
+    })
     return this.userProfile.update({ firstName, lastName});
   }
 

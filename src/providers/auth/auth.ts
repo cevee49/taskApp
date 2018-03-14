@@ -20,15 +20,21 @@ export class AuthProvider {
     return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
-  signupUser(email: string, password: string) : Promise<any>{
+  signupUser(email: string, password: string, firstName: string, lastName: String) : Promise<any>{
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(newUser => {
-        firebase
+      var fullName = firstName +` `+ lastName.charAt(0) + `.`;
+        newUser.updateProfile({
+          displayName: fullName
+        }).then(()=>{
+          firebase
           .database()
-          .ref(`/userProfile/${newUser.uid}/email`)
-          .set(email);
+          .ref(`/userProfile/${newUser.uid}`)
+          .set({email: email, firstName: firstName, lastName: lastName, profilePicture: null, createdAt: Date.now()} );
+        })
+        
       })
       .catch(error => {
         console.error(error);
