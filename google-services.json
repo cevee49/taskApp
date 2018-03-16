@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "747221230586",
+    "firebase_url": "https://taskapp-cv49.firebaseio.com",
+    "project_id": "taskapp-cv49",
+    "storage_bucket": "taskapp-cv49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747221230586:android:250685f451f4f91c",
+        "android_client_info": {
+          "package_name": "com.taskapp.taskqi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "747221230586-aghtr8v6ecfebi5hk5ld418f76qea62u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0KQ8Wnav-R2hK6SKXYMql7AhYvBwrUcU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -19,36 +19,50 @@
 
 
 <ion-content padding>
-  <ion-list>
-    <ion-list-header>
-      Personal Information
-    </ion-list-header>
-    <div id="profile-bg"></div>
-      <div id="content">
-        <div id="profile-info">
-          <img id="profile-image" src={{userProfile?.picture}}>
-          <h3 id="profile-name">Max</h3>
-          <span id="profile-description">Co-creator of <a href="https://twitter.com/ionicframework">@ionicframework</a>, founder of
-            <a href="https://twitter.com/driftyco">@driftyco</a></span>
-        </div>
+  <div id="profile-bg"></div>
+    <div id="content">
+      <div id="profile-info">
+        <img id="profile-image" src={{userProfile?.photo}}>
       </div>
-      <button ion-button icon-only (click)="takePicture()">
-        <ion-icon name="camera"></ion-icon>
-        </button>
-        <rating [(ngModel)]="rate" 
-        readOnly="true" 
-        max="5" 
-        emptyStarIconName="star-outline" 
-        halfStarIconName="star-half" 
-        starIconName="star" 
-        nullable="false" 
-        >    
-  </rating>
-  <button ion-button block
-  (click)="openReview()">
-  See full review
-</button>
-    <ion-item (click)="updateName()">
+    </div>
+      <button ion-button icon-only (click)="openGallery()">
+        choose from gallery
+      </button>
+      <button ion-button icon-only (click)="openCamera()">
+        take new photo
+      </button>
+      <form [formGroup]="editProfileForm" (submit)="updateProfile()" novalidate>
+        <!-- <ion-item>
+          <ion-label stacked>First Name</ion-label>
+          <ion-input formControlName="firstName" type="text" placeholder="Your first name">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!editProfileForm.controls.firstName.valid && editProfileForm.controls.firstName.dirty">
+            <p>Your first name has to be at least 2 characters long.</p>
+        </ion-item>
+        <ion-item>
+          <ion-label stacked>Last Name</ion-label>
+          <ion-input formControlName="lastName" type="text" placeholder="Your last name">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!editProfileForm.controls.lastName.valid && editProfileForm.controls.lastName.touched">
+            <p>Your last name has to be at least 2 characters long.</p>
+        </ion-item> -->
+        <ion-item>
+          <ion-label stacked>About Me</ion-label>
+          <ion-textarea formControlName="aboutMe" type="text"
+          placeholder="Describe yourself">
+          </ion-textarea>
+        </ion-item>
+        <div padding>
+            <button ion-button block type="submit" [disabled]="!editProfileForm.valid">
+                Save changes
+            </button>
+        </div> 
+    
+    
+      </form>
+    <!-- <ion-item (click)="updateName()">
         <ion-grid>
           <ion-row>
             <ion-col col-6> Name </ion-col>
@@ -84,7 +98,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-item>
-  </ion-list>
+    </ion-item> -->
 
 </ion-content>

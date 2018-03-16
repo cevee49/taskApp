@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase, { firestore } from 'firebase';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -41,6 +41,11 @@ export class ProfileProvider {
   getOtherProfile(otherId : string): firebase.database.Reference {
     return this.profile.child(`${otherId}`);
   }
+
+  updateToken(token: string){
+    return this.userProfile.update({ token : token});
+  }
+
   updateName(firstName: string, lastName: string): Promise<any> {
     var fullName = firstName +` `+ lastName.charAt(0) + `.`;
     this.currentUser.updateProfile({
@@ -48,6 +53,38 @@ export class ProfileProvider {
       photoURL: this.currentUser.photoURL
     })
     return this.userProfile.update({ firstName, lastName});
+  }
+
+  updatePhoto(photo: string): Promise<any>{
+    return firebase
+      .storage()
+      .ref(`image/guestProfile/${this.userId}/profilePicture.png`)
+      .putString(photo, 'base64', {contentType: 'image/png'})
+      .then(savedPicture => {
+        console.log("yes")
+         this.userProfile.update({  photo: savedPicture.downloadURL});
+     }).catch(error => {
+      console.error(error);
+    });
+  }
+
+  updateProfile(firstName: string, lastName: string, aboutMe: string, photo: string=null): Promise<any>{
+    var fullName = firstName +` `+ lastName.charAt(0) + `.`;
+    this.currentUser.updateProfile({
+      displayName: fullName,
+      photoURL: photo
+    })
+    if(photo!= null){
+      firebase
+      .storage()
+      .ref(`image/profilePicture/${this.userId}/profilePicture.png`)
+      .putString(photo, firebase.storage.StringFormat.DATA_URL)
+      .then(savedPicture => {
+        console.log("yes")
+         this.userProfile.update({ photo: savedPicture.downloadURL});
+       })
+    }
+    return this.userProfile.update({ firstName: firstName, lastName: lastName, aboutMe: aboutMe});
   }
 
   updateEmail(newEmail: string, password: string): Promise<any> {

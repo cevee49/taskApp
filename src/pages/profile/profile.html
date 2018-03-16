@@ -12,6 +12,9 @@
       <button ion-button icon-only (click)="logOut()">
       <ion-icon name="log-out"></ion-icon>
       </button>
+      <button ion-button icon-only (click)="editProfile()">
+        <ion-icon name="create"></ion-icon>
+        </button>
     </ion-buttons>
   </ion-navbar>
 
@@ -26,15 +29,12 @@
     <div id="profile-bg"></div>
       <div id="content">
         <div id="profile-info">
-          <img id="profile-image" src={{userProfile?.picture}}>
+          <img id="profile-image" src="{{userProfile?.photo}}">
           <h3 id="profile-name">Max</h3>
           <span id="profile-description">Co-creator of <a href="https://twitter.com/ionicframework">@ionicframework</a>, founder of
             <a href="https://twitter.com/driftyco">@driftyco</a></span>
         </div>
       </div>
-      <button ion-button icon-only (click)="takePicture()">
-        <ion-icon name="camera"></ion-icon>
-        </button>
         <rating [(ngModel)]="rate" 
         readOnly="true" 
         max="5" 

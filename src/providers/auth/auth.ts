@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class AuthProvider {
-
+  public imgurl = `https://firebasestorage.googleapis.com/v0/b/taskapp-cv49.appspot.com/o/image%2Fdefaultpicture.png?alt=media&token=3cfa48d6-5726-40ef-8396-92cbb27efbef`
   constructor() {
     console.log('Hello AuthProvider Provider'); 
   }
@@ -32,7 +32,7 @@ export class AuthProvider {
           firebase
           .database()
           .ref(`/userProfile/${newUser.uid}`)
-          .set({email: email, firstName: firstName, lastName: lastName, profilePicture: null, createdAt: Date.now()} );
+          .set({email: email, firstName: firstName, lastName: lastName, photo: this.imgurl, createdAt: Date.now()} );
         })
         
       })
