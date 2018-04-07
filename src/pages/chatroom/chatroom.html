@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{buddy?.email}}</ion-title>
+    <ion-title>{{buddy?.name}}</ion-title>
     <ion-buttons end>
       <button ion-button (click)="sendPicMsg()">
       <ion-icon name="camera"></ion-icon>
@@ -23,14 +23,14 @@
     <ion-list no-lines>
       <ion-item *ngFor = "let item of allmessages; let i = index" text-wrap>
         <!-- <ion-avatar item-left *ngIf="item.sender === this.buddy.id">
-          <img src="{{buddy.photoURL}}">
+          <img src="{{buddy.photo}}">
         </ion-avatar> -->
         <p> {{item?.timestamp | date:'short'}}</p>
         <div class="bubble me" *ngIf="item.sender === this.buddy.id">
           <h3>{{item.message}}</h3>
         </div>
         <!-- <ion-avatar item-right *ngIf="item.sender != this.buddy.id">
-          <img src="{{photoURL}}">
+          <img src="{{this.userProfile?.photo}}">
         </ion-avatar> -->
         <div class="bubble you" *ngIf="item.sender != this.buddy.id">
           <h3>{{item.message}}</h3>

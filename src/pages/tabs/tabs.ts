@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController} from 'ionic-angular';
-
+import { IonicPage, NavController, Events} from 'ionic-angular';
+import { ChatProvider } from "../../providers/chat/chat";
 import { Tab1Root } from '../pages';
 import { Tab2Root } from '../pages';
 import { Tab3Root } from '../pages';
@@ -24,13 +24,22 @@ export class TabsPage {
   tab2Title = " ";
   tab3Title = " ";
   tab4Title = " ";
+  badge: number = 1;
 
-  constructor(public navCtrl: NavController) {
+  constructor(
+    public navCtrl: NavController,
+    public chatProvider: ChatProvider,
+    public events: Events
+  ) {
 
       this.tab1Title = "Browse";
       this.tab2Title = "My tasks";
       this.tab3Title = "Messages";
       this.tab4Title = "Profile";
+      this.events.subscribe('newmessage', () => {
+        this.badge++;
+        
+  })
  
   }
 //   switchTab(tabIndex) {

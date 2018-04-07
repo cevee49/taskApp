@@ -20,6 +20,8 @@ export class TaskFilterPage {
   public address;
   public distance;
   public range;
+  public type;
+  public taskCat;
 
   constructor(
     public navCtrl: NavController, 
@@ -33,11 +35,14 @@ export class TaskFilterPage {
       latitude: '',
       longitude:''
      };
-     this.distance = `5`;
+     this.distance = `50+`;
+     this.range =6;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TaskFilterPage');
+    this.type = 'All';
+    this.taskCat = 'All categories'
     this.taskProvider.getTaskCategory().on("value", taskCatSnapshot => {
       this.taskCategory = [];
       taskCatSnapshot.forEach(snap => {
@@ -54,9 +59,12 @@ export class TaskFilterPage {
     let modal = this.modalCtrl.create('AutoCompletePage');
     // let me = this;
     modal.onDidDismiss(data => {
-      this.address.place = data.address;
-      this.address.latitude = data.latitude;
-      this.address.longitude = data.longitude;
+      if(data!=null){
+        this.address.place = data.address;
+        this.address.latitude = data.latitude;
+        this.address.longitude = data.longitude;
+      }
+      
     });
     modal.present();
   }
@@ -86,7 +94,7 @@ export class TaskFilterPage {
           this.distance = `50+`
           break;
       default:
-         this.distance = `5`
+         this.distance = `50+`
     } 
   }
 }

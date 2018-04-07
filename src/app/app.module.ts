@@ -60,7 +60,9 @@ export function provideSettings(storage: Storage) {
         deps: [Http]
       }
     }),
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      tabsHideOnSubPages: true,
+    }),
     IonicStorageModule.forRoot(),
     Ionic2RatingModule
   ],

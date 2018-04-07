@@ -32,7 +32,7 @@
         take new photo
       </button>
       <form [formGroup]="editProfileForm" (submit)="updateProfile()" novalidate>
-        <!-- <ion-item>
+        <ion-item>
           <ion-label stacked>First Name</ion-label>
           <ion-input formControlName="firstName" type="text" placeholder="Your first name">
           </ion-input>
@@ -47,7 +47,7 @@
         </ion-item>
         <ion-item class="error-message" *ngIf="!editProfileForm.controls.lastName.valid && editProfileForm.controls.lastName.touched">
             <p>Your last name has to be at least 2 characters long.</p>
-        </ion-item> -->
+        </ion-item>
         <ion-item>
           <ion-label stacked>About Me</ion-label>
           <ion-textarea formControlName="aboutMe" type="text"

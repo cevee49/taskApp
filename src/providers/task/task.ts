@@ -29,7 +29,6 @@ export class TaskProvider {
    
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
-        console.log(user.uid);
         this.userTaskListRef= firebase.database().ref(`myTask/${user.uid}`);
         this.currentUser = user;
       }
@@ -40,10 +39,10 @@ export class TaskProvider {
     taskName: string, 
     taskDate: string, 
     taskCategory: string, 
-    taskLocation: string,
+    taskLocation: string ,
     taskDescription: string, 
     taskBudget: number,
-    taskerNumber: number,
+    taskerNumber: number
     // taskPoster: string
   ): PromiseLike<any> {
     const userId: string = firebase.auth().currentUser.uid;
@@ -56,24 +55,59 @@ export class TaskProvider {
       location: taskLocation,
       description: taskDescription,
       taskerNumber: taskerNumber,
+      assignNumber: 0,
+      completedNumber: 0,
       createdAt: 0- Date.now(),
-      // taskStatus: `OPEN`
-    }).then(()=>{
-      this.taskListRef.child(`${newTaskKey}/poster`).update({
-        posterId: this.currentUser.uid,
-        displayName: this.currentUser.displayName
-      })
+      poster: this.currentUser.uid
     }).then(()=>{
       this.userTaskListRef.child(`${newTaskKey}`).update({
-        name: taskName,
-        date: taskDate,
-        budget: taskBudget,
-        location: taskLocation,
-        taskerNumber: taskerNumber,
+
         createdAt: 0- Date.now(),
         // taskStatus: `OPEN`
       })
+
     });
+  }
+
+  updateTask(
+    taskId: string,
+    taskName: string, 
+    taskDate: string, 
+    taskCategory: string, 
+    taskLocation: string ,
+    taskDescription: string, 
+    taskBudget: number,
+    taskerNumber: number
+    // taskPoster: string
+  ): PromiseLike<any> {
+    const userId: string = firebase.auth().currentUser.uid;
+    // let newTaskKey = this.taskListRef.push().key;
+    return this.taskListRef.child(`${taskId}`).update({
+      name: taskName,
+      date: taskDate,
+      budget: taskBudget ,
+      category: taskCategory,
+      location: taskLocation,
+      description: taskDescription,
+      taskerNumber: taskerNumber,
+      // assignNumber: 0,
+      // completedNumber: 0,
+      // createdAt: 0- Date.now(),
+      // poster: this.currentUser.uid
+    });
+  }
+
+  deleteTask(taskId: string){
+    const uid = this.currentUser.uid;
+    // return this.userTaskListRef.child(`${taskId}`).remove();
+    return this.taskListRef.child(`${taskId}`).remove().then(()=> {
+      console.log("delete");
+      return this.userTaskListRef.child(`${taskId}`).remove().then(()=> {
+        this.candidateRef.child(`${taskId}`).remove();
+      });
+        
+    });
+
   }
 
   getTaskList(): firebase.database.Query {
@@ -96,24 +130,22 @@ export class TaskProvider {
     return this.taskListRef.child(taskId);
   }
 
-  addCandidate (taskId: string, taskName: string,taskLocation: string, taskDate: string, offerPrice: number) : PromiseLike<any> {
+  addCandidate (poster: string, taskId: string, taskName: string,taskLocation: string, taskDate: string, offerPrice: number) : PromiseLike<any> {
     const uid = this.currentUser.uid;
     const displayName = this.currentUser.displayName;
     
     return this.candidateRef.child(`${taskId}/${uid}`).update({
-      displayName: displayName, 
+      // displayName: displayName, 
       offerPrice: offerPrice,
       offeredAt:0- Date.now(),
       status: `candidate`
     }).then(()=>{
         this.userTaskOfferRef.child(`${uid}/${taskId}`).update({
-          name: taskName,
-          location: taskLocation,
-          date: taskDate,
+
           offeredAt:0- Date.now(),
-          offerPrice: offerPrice,
-          status: `candidate`
+
         })
+        // this.userTaskOfferRef.child(`${uid}`).set({[taskId]: true })
       });
     // return this.taskListRef.child(`${taskId}/candidate`).push()
   }
@@ -126,15 +158,17 @@ export class TaskProvider {
     return this.candidateRef.child(`${taskId}/${taskerId}`).update({
       status: `tasker`,
       completed: false
-    }).then(()=>{
-        this.userTaskOfferRef.child(`${taskerId}/${taskId}`).update({
-          offeredAt:0- Date.now(),
-          status: `tasker`,
-          completed: false
-        })
-    }).then(()=>{
+    })
+    // .then(()=>{
+    //     this.userTaskOfferRef.child(`${taskerId}/${taskId}`).update({
+    //       offeredAt:0- Date.now(),
+    //       status: `tasker`,
+    //       completed: false
+    //     })
+    // })
+    .then(()=>{
       this.taskListRef.child(`${taskId}`).transaction(task => {
-        task.taskerNumber -= 1;
+        task.assignNumber += 1;
         return task;
       });
     })
@@ -145,11 +179,19 @@ export class TaskProvider {
     // return this.taskListRef.child(`${taskId}/complete`).update({[taskerId]: true});
     return this.candidateRef.child(`${taskId}/${taskerId}`).update({
       completed: true
-    }).then(()=>{
-        this.userTaskOfferRef.child(`${taskerId}/${taskId}`).update({
-          offeredAt:0- Date.now(),
-          completed: true
-        })
-    });
+    })
+    // .then(()=>{
+    //     this.userTaskOfferRef.child(`${taskerId}/${taskId}`).update({
+    //       offeredAt:0- Date.now(),
+    //       completed: true
+    //     })
+    // })
+    .then(()=>{
+      this.taskListRef.child(`${taskId}`).transaction(task => {
+        task.completedNumber += 1;
+        return task;
+      });
+    })
+    ;
   }
 }

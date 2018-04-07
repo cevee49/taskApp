@@ -1,0 +1,72 @@
+<!--
+  Generated template for the TaskUpdatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>taskUpdate</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="updateTaskForm" (submit)="updateTask()" novalidate>
+    <ion-item>
+        <ion-label stacked>Task Name</ion-label>
+        <ion-input formControlName="taskName" type="text"
+        placeholder="e.g. Paint a bedroom" >
+        </ion-input>
+      </ion-item>
+      <ion-item class="error-message" *ngIf="!updateTaskForm.controls.taskName.valid && (updateTaskForm.controls.taskName.dirty || updateTaskForm.controls.taskName.touched)">
+        <p>Task Name cannot be empty.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Category</ion-label>
+        <ion-select formControlName="taskCat" interface="popover">
+            <!-- <ion-item *ngFor="let category of taskCategory"> -->
+              <ion-option *ngFor="let category of taskCategory" [value]="category.name">{{category.name}}</ion-option>
+            <!-- </ion-item> -->
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Description</ion-label>
+        <ion-textarea formControlName="taskDescription" type="text"
+        placeholder="Describe your task">
+        </ion-textarea>
+      </ion-item>
+        <ion-item>
+          <ion-label>This is an online task</ion-label>
+          <ion-checkbox checked="false" formControlName="taskOnline" (click)="updateOnline($event.checked)"></ion-checkbox>
+        </ion-item>
+      <ion-item *ngIf="!updateTaskForm.value.taskOnline">
+        <ion-label stacked>Location</ion-label>
+        <ion-input (click)="showAddressModal()" formControlName="taskAddress" type="text"
+        placeholder="Where is your location?">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Budget (per tasker)</ion-label>
+        <ion-input formControlName="taskBudget" type="number"
+        placeholder="What's your budget?">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>How many Tasker do you need?</ion-label>
+        <ion-input formControlName="taskerNumber" type="number">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Due Date</ion-label>
+        <ion-datetime displayFormat="D MMM, YY" pickerFormat="DD MMM YYYY" min="{{today}}" max="2019"
+        formControlName="taskDate">
+        </ion-datetime>
+      </ion-item>
+      <button ion-button block>
+        Post Task
+      </button>
+</form>
+</ion-content>

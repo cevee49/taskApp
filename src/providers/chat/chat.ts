@@ -41,13 +41,15 @@ export class ChatProvider {
       taskId: taskId,
       lastmsg: msg, 
       timestamp: 0- Date.now(),
-      buddyId: buddyId
+      buddyId: buddyId,
+      read: true
     }).then (() => {
       this.chatRoomRef.child(`${buddyId}/${roomId}`).update({
         taskId: taskId,
         lastmsg: msg, 
         timestamp: 0- Date.now(),
-        buddyId: this.userId
+        buddyId: this.userId,
+        read: false
       });
     }).then (() => {
       console.log(this.key);
@@ -61,8 +63,6 @@ export class ChatProvider {
   }
 
   getMessages(taskId: string, buddyId: string): firebase.database.Reference{
-    console.log(this.userId);
-    console.log(taskId);
     const roomId ='chat_'+ taskId+'_'+ (buddyId<this.userId ? buddyId+'_'+this.userId : this.userId+'_'+buddyId);
     return this.messageRef.child(`${roomId}`);
   }
@@ -72,32 +72,11 @@ export class ChatProvider {
     return this.chatRoomRef.child(`${this.userId}`);
   }
 
-  initializeRoom(taskId: string): firebase.database.Reference{
-    console.log("ini");
-    // this.chatMembersRef = firebase.database().ref(`chatmember/${taskId}`);
-    this.chatRef = firebase.database().ref(`chats/${this.userId}`);
-    this.chatMembersRef
-      .child(`${taskId}/${this.userId}`)
-      .on("value",membersSnapshot => {
-        if (membersSnapshot.val() !== null){
-          membersSnapshot.forEach(snap => {
-            this.key = snap.key;
-            // console.log("key");
-            console.log("getkey");
-            // this.getMessages();
-            return false;
-          });
-        } else {
-          console.log("not");
-          this.key = this.chatRoomRef.child(`${this.userId}`).push().key;
-          console.log(this.key);
-          this.exists=false;
-          this.chatMembersRef.child(`${this.userId}`).update({[this.key]: true});
-        }
-      });
-      console.log("returnnow")
-      return this.messageRef.child(`${this.key}`);
-    }
-
+  setRead(taskId: string, buddyId: string): PromiseLike <any>{
+    const roomId ='chat_'+ taskId+'_'+ (buddyId<this.userId ? buddyId+'_'+this.userId : this.userId+'_'+buddyId);
+    return this.chatRoomRef.child(`${this.userId}/${roomId}`).update({
+      read: true
+    })
+  }
 }
 

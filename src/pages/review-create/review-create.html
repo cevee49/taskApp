@@ -14,22 +14,22 @@
 
 
 <ion-content padding>
-    <form [formGroup]="reviewForm" (click)="addReview()">
-  <rating formControlName="rate" 
-        readOnly="false" 
-        max="5" 
-        emptyStarIconName="star-outline" 
-        halfStarIconName="star-half" 
-        starIconName="star" 
-        nullable="false" 
-  > 
-        <!-- (ngModelChange)="onModelChange($event)" -->
-</rating>
-<p>Please rate your experience between 1-5 stars!</p>
-<!-- <ion-item class="error-message" *ngIf="!reviewForm.controls.rate.valid && reviewForm.controls.rate.dirty">
-  <p>Please rate your experience between 1-5 stars!</p>
-</ion-item> -->
-<div id="rating">{{rate}}/5 stars</div>
+    <form [formGroup]="reviewForm" (submit)="addReview()" novalidate >
+      <ion-item>
+        <p>Please rate your experience between 1-5 stars!</p>
+          <rating formControlName="rate" 
+          readOnly="false" 
+          max="5" 
+          emptyStarIconName="star-outline" 
+          halfStarIconName="star-half" 
+          starIconName="star" 
+          nullable="false" 
+        > 
+          <!-- (ngModelChange)="onModelChange($event)" -->
+        </rating>
+      </ion-item>
+    
+
 <ion-item>
   <ion-label stacked>Tell us about your experience</ion-label>
   <ion-textarea formControlName="review" type="text"

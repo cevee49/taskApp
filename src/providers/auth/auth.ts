@@ -32,9 +32,28 @@ export class AuthProvider {
           firebase
           .database()
           .ref(`/userProfile/${newUser.uid}`)
-          .set({email: email, firstName: firstName, lastName: lastName, photo: this.imgurl, createdAt: Date.now()} );
+          .set({
+            email: email, 
+            firstName: firstName, 
+            lastName: lastName, 
+            photo: this.imgurl, 
+            taskerReview: 0,
+            taskerReviewAve: 0,
+            posterReview:0,
+            posterReviewAve:0,
+            createdAt: Date.now()
+          }).then(()=>{
+            firebase
+             .auth()
+             .currentUser
+             .sendEmailVerification().then(function() {
+              console.log("email sent");
+            }).catch(function(error) {
+              // An error happened.
+            });
+            
+          })
         })
-        
       })
       .catch(error => {
         console.error(error);

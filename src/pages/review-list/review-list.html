@@ -7,15 +7,15 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>reviewList</ion-title>
+    <ion-title>Reviews</ion-title>
   </ion-navbar>
   <ion-toolbar no-border-top>
     <ion-segment [(ngModel)]="review">
       <ion-segment-button value="tasker">
-        Posted
+        As Tasker
       </ion-segment-button>
       <ion-segment-button value="poster">
-        Offered
+        As Poster
       </ion-segment-button>
       <!-- <ion-segment-button value="ducklings">
         Ducklings
@@ -27,20 +27,51 @@
 
 <ion-content padding>
   <div [ngSwitch]="review">
-    <ion-list *ngSwitchCase="'tasker'">
-      <ion-item *ngFor="let taskerReview of taskerReviewList">
-        <rating [(ngModel)]="taskerReview.rate" 
-        readOnly="readOnly" 
-        max="5" 
-        emptyStarIconName="star-outline" 
-        halfStarIconName="star-half" 
-        starIconName="star" 
-        nullable="false" 
-        > 
-        </rating>
-        <p>{{taskerReview?.review}}</p>
-        <p>{{taskerReview?.rate}}</p>
-      </ion-item>
-    </ion-list>
-    </div>
+      <ion-list *ngSwitchCase="'tasker'">
+          <div *ngIf="taskerReviewList?.length== 0">
+              NO REVIEW AVAILABLE
+            </div>
+        <ion-item *ngFor="let taskerReview of taskerReviewList">
+          <ion-avatar item-start>
+            <img src={{taskerReview?.posterPhoto}} />
+          </ion-avatar>
+          <p>{{taskerReview?.posterName}}</p>
+          <p>{{taskerReview?.taskName}}</p>
+          <rating [(ngModel)]="taskerReview.rate" 
+          readOnly="readOnly" 
+          max="5" 
+          emptyStarIconName="star-outline" 
+          halfStarIconName="star-half" 
+          starIconName="star" 
+          nullable="false" 
+          > 
+          </rating>
+          <p>{{taskerReview?.review}}</p>
+          
+        </ion-item>
+      </ion-list>
+      <ion-list *ngSwitchCase="'poster'">
+          <div *ngIf="posterReviewList?.length== 0">
+              NO REVIEWS AVAILABLE
+            </div>
+        <ion-item *ngFor="let posterReview of posterReviewList">
+          <ion-avatar item-start>
+            <img src={{posterReview?.posterPhoto}} />
+          </ion-avatar>
+          <p>{{posterReview?.posterName}}</p>
+          <p>{{posterReview?.taskName}}</p>
+          <rating [(ngModel)]="posterReview.rate" 
+          readOnly="readOnly" 
+          max="5" 
+          emptyStarIconName="star-outline" 
+          halfStarIconName="star-half" 
+          starIconName="star" 
+          nullable="false" 
+          > 
+          </rating>
+          <p>{{posterReview?.review}}</p>
+          
+        </ion-item>
+        </ion-list>
+  </div>
 </ion-content>

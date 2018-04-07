@@ -17,8 +17,13 @@
   <ion-list>
     <ion-item *ngFor="let chat of chatlist"
     (click)="goToChatroom(chat?.taskId, chat?.buddyId)">
-    <h2>{{chat?.lastmsg}}</h2>
+    <ion-avatar item-start>
+        <img src={{chat?.photo}} />
+    </ion-avatar>
+    <h2>{{chat?.buddyName}}</h2>
+    <p>{{chat?.lastmsg}}</p>
     <p> {{chat?.timestamp | date:'short'}}</p>
+    <span class="dot" *ngIf="(chat?.read==false)" item-end></span>
     <!-- <p>Pay: <strong>${{task?.budget}}</strong></p>
     <p>Date: <strong>{{task?.date}}</strong></p> -->
     </ion-item>

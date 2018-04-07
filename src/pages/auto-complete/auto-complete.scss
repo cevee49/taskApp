@@ -1,3 +1,20 @@
 page-auto-complete {
-
+    .title{
+        padding-bottom: 30px;
+    }
+    ion-searchbar{
+        padding-top: 30px;
+    }
+    .searchbar-ios-cancel{
+        margin-right: 0px !important;
+        opacity: 1!important;
+        padding-left: 10px !important;
+    }
+    .searchbar-md .searchbar-md-cancel{
+        display: inline-flex !important;
+        background-color: white !important;
+    }
+    .searchbar-search-icon{
+        display: none;
+    }
 }

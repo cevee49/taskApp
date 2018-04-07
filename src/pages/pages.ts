@@ -8,5 +8,5 @@ export const MainPage = 'TabsPage';
 // The initial root pages for our tabs (remove if not using tabs)
 export const Tab1Root = 'TaskListPage';
 export const Tab2Root = 'MyTaskPage';
-export const Tab4Root = 'ProfilePage';
 export const Tab3Root = 'ChatListPage';
+export const Tab4Root = 'ProfilePage';

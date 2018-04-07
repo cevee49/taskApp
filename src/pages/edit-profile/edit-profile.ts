@@ -91,7 +91,7 @@ export class EditProfilePage {
       this.profileProvider.updateProfile(firstName, lastName, aboutMe, this.photo).then(
         profile => {
           this.loading.dismiss();
-          // this.navCtrl.pop();
+          this.navCtrl.pop();
       },
       error => {
         this.loading.dismiss().then(() => {

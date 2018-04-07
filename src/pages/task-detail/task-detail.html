@@ -7,7 +7,15 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>TaskDetail</ion-title>
+    <ion-title>Task Detail</ion-title>
+    <ion-buttons end *ngIf="(userId == currentTask?.poster) || (currentTask?.taskerNumber - currentTask?.completeNumber)>0">
+      <button ion-button icon-only (click)="editTask()">
+      <ion-icon name="create"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="deleteTask()">
+        <ion-icon name="trash"></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -15,39 +23,48 @@
 
 <ion-content padding>
   <h2>{{currentTask?.name}}</h2>
-  <p>Posted by {{currentTask?.posterName}}  {{currentTask?.createdAt | date:'short'}}</p>
-  <p>Date: <strong>{{currentTask?.date}}</strong></p>
-  <div  *ngIf="!currentTask?.tasker && candidateList?.length>0 && currentTask?.taskerNumber>0">
-    <ion-item>
-      <!-- <ion-icon name="logo-twitter" item-start></ion-icon> -->
-      <h2>OFFERS</h2>
-      <ion-badge item-end>{{candidateList?.length}}</ion-badge>
-    </ion-item>
-    <ion-list>
-      <ion-item *ngFor="let candidate of candidateList">
+  <ion-list>
+    <ion-item on-tap="openProfile(currentTask?.poster)">
       <ion-avatar item-start>
-        <img [src]="null" />
+          <img src={{poster?.photo}} />
       </ion-avatar>
-      <h2>{{candidate?.name}}</h2>
-      <div  *ngIf="(userId == this.currentTask.poster)">
-      <p>${{candidate?.offerPrice}}</p>
-      <button ion-button block
-      (click)="addTasker(candidate.id)">
-      Assign
-      </button>
-      <button ion-button block
-      (click)="chat(candidate?.id, currentTask?.id )">
-      CHAT
-      </button>
-    </div>
-      </ion-item>
-    </ion-list>
-  </div>
+      <p>POSTED BY </p>
+      <p><strong>{{poster?.fullName}}</strong></p>
+      <p item-end>{{currentTask?.createdAt | date:'longDate'}}</p>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="cash" item-start></ion-icon>
+      <!-- <p >TASK PRICE</p> -->
+      <p >${{currentTask?.budget}} per tasker</p>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pin" item-start></ion-icon>
+      <!-- <p>LOCATION</p> -->
+      <p>{{currentTask?.location}}</p>
+      <p *ngIf="!(currentTask?.location)">online</p>
+    </ion-item>   
+    <ion-item>
+      <ion-icon name="calendar" item-start></ion-icon>
+      <!-- <p>DUE DATE</p> -->
+      <p>{{currentTask?.date}}</p>
+    </ion-item>
+    <ion-item *ngIf="(currentTask?.taskerNumber- currentTask?.assignNumber>0 )">
+        <ion-icon name="contacts" item-start></ion-icon>
+        <!-- <p >SPOTS LEFT</p> -->
+        <p *ngIf="((currentTask?.taskerNumber - currentTask?.assignNumber) ==1 )">{{currentTask?.taskerNumber- currentTask?.assignNumber}} spot left</p>
+        <p *ngIf="((currentTask?.taskerNumber- currentTask?.assignNumber) >1)">{{currentTask?.taskerNumber- currentTask?.assignNumber}} spot lefts </p>
+    </ion-item>
+    <ion-item>
+      <!-- <p>DETAILS</p> -->
+      <ion-icon name="information-circle" item-start></ion-icon>
+      <p>{{currentTask?.description}}</p>
+    </ion-item>
+  </ion-list>
   <div  *ngIf="taskerList?.length>0 || completedList?.length>0">
-    <h2>Tasker</h2>
-    <ion-item *ngFor="let tasker of taskerList">
-    <ion-avatar item-start>
-        <img [src]="null" />
+    <p>TASKER</p>
+    <ion-item *ngFor="let tasker of taskerList" >
+    <ion-avatar item-start >
+        <img src={{tasker?.photo}} />
     </ion-avatar>
     <p>{{tasker?.name}}</p>
     <div  *ngIf="(userId == currentTask?.poster)">
@@ -60,18 +77,78 @@
     COMPLETED
     </button>
     </div>
+    </ion-item>
+  </div>
+
+  <div  *ngIf="!currentTask?.tasker && (currentTask?.taskerNumber- currentTask?.assignNumber)>0  ">
+    <ion-item>
+      <p>OFFERS</p>
+      <ion-badge item-end>{{candidateList?.length}}</ion-badge>
+    <div *ngIf="candidateList?.length==0">
+      <p>no offer yet</p>
+    </div>
   </ion-item>
+    <div *ngIf="candidateList?.length>0">
+      <ion-list>
+        <ion-item *ngFor="let candidate of candidateList">
+        <ion-avatar item-start>
+          <img src={{candidate?.photo}} />
+        </ion-avatar>
+        <h2>{{candidate?.name}}</h2>
+        <div  *ngIf="(userId == this.currentTask?.poster)">
+        <p>${{candidate?.offerPrice}}</p>
+        <button ion-button block
+        (click)="addTasker(candidate.id)">
+        Assign
+        </button>
+        <button ion-button block
+        (click)="chat(candidate?.id, currentTask?.id )">
+        CHAT
+        </button>
+      </div>
+        </ion-item>
+      </ion-list>
+    </div>
+    
   </div>
-  <div  *ngIf="!(userId == this.currentTask.poster)">
-    <button ion-button block
-    (click)="addCandidate()">
-    Make Offer
-    </button>
-  </div>
-  <div *ngIf="!(currentTask?.poster == userId)">
-    <button ion-button block
-    (click)="chat(currentTask?.poster, currentTask?.id )">
-    CHAT
-    </button>
-  </div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div  *ngIf="!(userId == currentTask?.poster) && (currentTask?.taskerNumber- currentTask?.assignNumber)>0">
+          <button ion-button block
+          (click)="addCandidate()">
+          Make Offer
+          </button>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div *ngIf="!(currentTask?.poster == userId) && (currentTask?.taskerNumber- currentTask?.assignNumber)>0 ">
+          <button ion-button block
+          (click)="chat(currentTask?.poster, currentTask?.id )">
+          CHAT
+          </button>
+        </div>
+      </ion-col>
+    <ion-row>
+      <ion-col>
+        <div *ngIf="usertasker && (currentTask?.taskerNumber- currentTask?.assignNumber)==0">
+          <button ion-button block
+          (click)="chat(currentTask?.poster, currentTask?.id )">
+          CHAT
+          </button>
+        </div>
+      </ion-col>
+    </ion-row>  
+      
+    </ion-row>
+    
+
+     
+  </ion-grid>
+  
+  
+  
+ 
+  
 </ion-content>
