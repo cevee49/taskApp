@@ -176,7 +176,6 @@ export class TaskProvider {
   }
   
   completeTask(taskId, taskerId): PromiseLike<any>{
-    // return this.taskListRef.child(`${taskId}/complete`).update({[taskerId]: true});
     return this.candidateRef.child(`${taskId}/${taskerId}`).update({
       completed: true
     })
