@@ -7,34 +7,39 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Profile</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="logOut()">
-      <ion-icon name="log-out"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title>Edit Profile</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <div id="profile-bg"></div>
-    <div id="content">
-      <div id="profile-info">
+  <!-- <div id="profile-bg"></div>
+    <div id="content"> -->
+      <div id="profile-info"  class="profile-image">
         <img id="profile-image" src={{userProfile?.photo}}>
       </div>
-    </div>
-      <button ion-button icon-only (click)="openGallery()">
-        choose from gallery
-      </button>
-      <button ion-button icon-only (click)="openCamera()">
-        take new photo
-      </button>
+    <!-- </div> -->
+    <ion-grid>
+      <ion-row>
+        <ion-col col-6>
+            <button ion-button icon-only block class="edit" (click)="openGallery()">
+                Choose existing
+              </button>
+        </ion-col>
+        <ion-col col-6>
+            <button ion-button icon-only block class="edit" (click)="openCamera()">
+               Take a photo
+              </button>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+      
+     
       <form [formGroup]="editProfileForm" (submit)="updateProfile()" novalidate>
         <ion-item>
           <ion-label stacked>First Name</ion-label>
-          <ion-input formControlName="firstName" type="text" placeholder="Your first name">
+          <ion-input formControlName="firstName" type="text" placeholder="Your first name" text-capitalize>
           </ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!editProfileForm.controls.firstName.valid && editProfileForm.controls.firstName.dirty">
@@ -42,7 +47,7 @@
         </ion-item>
         <ion-item>
           <ion-label stacked>Last Name</ion-label>
-          <ion-input formControlName="lastName" type="text" placeholder="Your last name">
+          <ion-input formControlName="lastName" type="text" placeholder="Your last name" text-capitalize>
           </ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!editProfileForm.controls.lastName.valid && editProfileForm.controls.lastName.touched">

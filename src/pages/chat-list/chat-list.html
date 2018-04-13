@@ -7,25 +7,56 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>ChatList</ion-title>
+      <!-- <ion-buttons start>
+          <button ion-button (click)="openNotif()" >
+          <ion-icon name="notifications"></ion-icon>
+        </button>
+        </ion-buttons> -->
+    <ion-title>Messages</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles">  
+        </ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-item *ngFor="let chat of chatlist"
     (click)="goToChatroom(chat?.taskId, chat?.buddyId)">
     <ion-avatar item-start>
         <img src={{chat?.photo}} />
     </ion-avatar>
-    <h2>{{chat?.buddyName}}</h2>
-    <p>{{chat?.lastmsg}}</p>
-    <p> {{chat?.timestamp | date:'short'}}</p>
-    <span class="dot" *ngIf="(chat?.read==false)" item-end></span>
-    <!-- <p>Pay: <strong>${{task?.budget}}</strong></p>
-    <p>Date: <strong>{{task?.date}}</strong></p> -->
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+            <p class="name">{{chat?.buddyName}}</p>
+        </ion-col>
+        <ion-col>
+          <p class="time" *ngIf=!chat?.display>{{chat?.timestamp | date: "dd/MM/yyyy"}}</p>
+          <p class="time" *ngIf=chat?.display>{{chat?.timestamp | date: "HH:mm"}}</p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+            <h2>{{chat?.taskName}}</h2>
+        </ion-col>
+        <ion-col>
+            <span class="dot" *ngIf="(chat?.read==false)" ></span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col width-100>
+            <p>{{chat?.lastmsg}}</p>
+        </ion-col>
+          
+      </ion-row>
+    </ion-grid>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -49,8 +49,12 @@ export class ReviewCreatePage {
     } else {
       this.navCtrl.pop();
       const rate: number =this.reviewForm.value.rate;
-      const review: string =this.reviewForm.value.review; 
-      this.reviewProvider.addReview(this.navParams.get("taskId"), this.navParams.get("role"), this.navParams.get("taskerId"), this.navParams.get("taskName"), rate, review, this.navParams.get("poster"));
+      const review: string =this.reviewForm.value.review;
+      // if(this.navParams.get("role") ===`poster`) {
+      //   console.log("hi")
+      // }
+      this.reviewProvider
+      .addReview(this.navParams.get("taskId"), this.navParams.get("role"), this.navParams.get("taskerId"), this.navParams.get("taskName"), rate, review, this.navParams.get("poster"));
     }
    
   }

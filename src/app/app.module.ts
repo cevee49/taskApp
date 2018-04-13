@@ -2,6 +2,8 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { Http, HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { Camera } from '@ionic-native/camera';
+import { FCM } from '@ionic-native/fcm';
+import { Network } from '@ionic-native/network';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -23,7 +25,7 @@ import { ReviewProvider } from '../providers/review/review';
 import { Ionic2RatingModule } from "ionic2-rating";
 import { LocationProvider } from '../providers/location/location';
 import { ImghandlerProvider } from '../providers/imghandler/imghandler';
-import { FCM } from '@ionic-native/fcm';
+import { NotificationProvider } from '../providers/notification/notification';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -64,7 +66,7 @@ export function provideSettings(storage: Storage) {
       tabsHideOnSubPages: true,
     }),
     IonicStorageModule.forRoot(),
-    Ionic2RatingModule
+    Ionic2RatingModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -76,6 +78,7 @@ export function provideSettings(storage: Storage) {
     User,
     Camera,
     FCM,
+    Network,
     GoogleMaps,
     SplashScreen,
     StatusBar,
@@ -90,6 +93,7 @@ export function provideSettings(storage: Storage) {
     ReviewProvider,
     LocationProvider,
     ImghandlerProvider,
+    NotificationProvider,
   ]
 })
 export class AppModule { }

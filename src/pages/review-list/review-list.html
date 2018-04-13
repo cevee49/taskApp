@@ -29,14 +29,12 @@
   <div [ngSwitch]="review">
       <ion-list *ngSwitchCase="'tasker'">
           <div *ngIf="taskerReviewList?.length== 0">
-              NO REVIEW AVAILABLE
+              NO REVIEW YET
             </div>
         <ion-item *ngFor="let taskerReview of taskerReviewList">
-          <ion-avatar item-start>
+          <ion-avatar item-start (click)="openProfile(posterReview?.posterId)">
             <img src={{taskerReview?.posterPhoto}} />
           </ion-avatar>
-          <p>{{taskerReview?.posterName}}</p>
-          <p>{{taskerReview?.taskName}}</p>
           <rating [(ngModel)]="taskerReview.rate" 
           readOnly="readOnly" 
           max="5" 
@@ -46,20 +44,21 @@
           nullable="false" 
           > 
           </rating>
-          <p>{{taskerReview?.review}}</p>
+          
+          <h2 text-capitalize><strong>{{taskerReview?.taskName}}</strong></h2>
+          <p><strong text-capitalize>{{taskerReview?.posterName}}</strong> said "{{taskerReview?.review}}"</p>
+
           
         </ion-item>
       </ion-list>
       <ion-list *ngSwitchCase="'poster'">
           <div *ngIf="posterReviewList?.length== 0">
-              NO REVIEWS AVAILABLE
-            </div>
+              NO REVIEW YET
+          </div>
         <ion-item *ngFor="let posterReview of posterReviewList">
-          <ion-avatar item-start>
+          <ion-avatar item-start (click)="openProfile(posterReview?.posterId)">
             <img src={{posterReview?.posterPhoto}} />
           </ion-avatar>
-          <p>{{posterReview?.posterName}}</p>
-          <p>{{posterReview?.taskName}}</p>
           <rating [(ngModel)]="posterReview.rate" 
           readOnly="readOnly" 
           max="5" 
@@ -69,8 +68,9 @@
           nullable="false" 
           > 
           </rating>
-          <p>{{posterReview?.review}}</p>
-          
+          <p text-capitalize><strong>{{posterReview?.posterName}}</strong></p>
+          <p><strong text-capitalize>{{posterReview?.taskName}}</strong> said "{{posterReview?.review}}"</p>
+  
         </ion-item>
         </ion-list>
   </div>

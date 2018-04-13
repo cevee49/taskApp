@@ -7,9 +7,14 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>myTask</ion-title>
+      <!-- <ion-buttons start>
+          <button ion-button (click)="openNotif()" >
+          <ion-icon name="notifications"></ion-icon>
+        </button>
+        </ion-buttons> -->
+    <ion-title>My Task</ion-title>
   </ion-navbar>
-  <ion-toolbar no-border-top>
+  <!-- <ion-toolbar no-border-top>
     <ion-segment [(ngModel)]="tasks">
       <ion-segment-button value="posted">
         Posted
@@ -17,23 +22,46 @@
       <ion-segment-button value="offered">
         Offered
       </ion-segment-button>
-      <!-- <ion-segment-button value="ducklings">
-        Ducklings
-      </ion-segment-button> -->
     </ion-segment>
-</ion-toolbar>
+</ion-toolbar> -->
 </ion-header>
 
 
 <ion-content padding>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles">  
+      </ion-refresher-content>
+    </ion-refresher>
+  <div>
+      <ion-segment [(ngModel)]="tasks">
+          <ion-segment-button value="posted">
+            Posted
+          </ion-segment-button>
+          <ion-segment-button value="offered">
+            Offered
+          </ion-segment-button>
+        </ion-segment>
+  </div>
   <div [ngSwitch]="tasks">
+
     <ion-list *ngSwitchCase="'posted'">
+      <ion-item>
+          <ion-select [(ngModel)]="postedtype" interface="popover" >
+              <ion-option [value]="all" >All tasks</ion-option>
+              <ion-option [value]="complete"  >Completed tasks</ion-option>
+              <ion-option [value]="on"  >On-going tasks</ion-option>
+              <ion-option [value]="open" >Open tasks</ion-option>
+            </ion-select>
+      </ion-item>
       <ion-item *ngFor="let postedTask of postedTaskList"
         (click)="goToTaskDetail(postedTask.id)">
         <ion-avatar item-start>
           <img src={{postedTask?.photo}} />
         </ion-avatar>
-        <h2>{{postedTask?.name}}</h2>
+        <h2 text-capitalize>{{postedTask?.name}}</h2>
         <p *ngIf="(postedTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> {{postedTask?.location}}</p>
         <p *ngIf="!(postedTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> online</p>
         <p><ion-icon name="calendar" class="icon1"></ion-icon>{{postedTask?.date | date:'longDate' }}</p>
@@ -49,12 +77,20 @@
     </ion-list>
 
     <ion-list *ngSwitchCase="'offered'">
+        <ion-item>
+            <ion-select [(ngModel)]="offeredtype" interface="popover" (ionChange)="onChange()">
+                <ion-option [value]="all">All tasks</ion-option>
+                <ion-option [value]="complete">Completed tasks</ion-option>
+                <ion-option [value]="on">On-going tasks</ion-option>
+                <ion-option [value]="open">Open tasks</ion-option>
+              </ion-select>
+        </ion-item>
       <ion-item *ngFor="let offeredTask of offeredTaskList"
         (click)="goToTaskDetail(offeredTask.id)">
     <ion-avatar item-start>
       <img src={{offeredTask?.photo}} />
     </ion-avatar>
-    <h2>{{offeredTask?.name}}</h2>
+    <h2 text-capitalize>{{offeredTask?.name}}</h2>
         <p *ngIf="(offeredTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> {{offeredTask?.location}}</p>
         <p *ngIf="!(offeredTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> online</p>
         <p><ion-icon name="calendar" class="icon1"></ion-icon> {{offeredTask?.date | date:'longDate' }}</p>

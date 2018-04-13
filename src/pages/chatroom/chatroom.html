@@ -7,12 +7,12 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{buddy?.name}}</ion-title>
-    <ion-buttons end>
+    <ion-title text-capitalize>{{taskname}}</ion-title>
+    <!-- <ion-buttons end>
       <button ion-button (click)="sendPicMsg()">
       <ion-icon name="camera"></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
 
 </ion-header>
@@ -25,7 +25,7 @@
         <!-- <ion-avatar item-left *ngIf="item.sender === this.buddy.id">
           <img src="{{buddy.photo}}">
         </ion-avatar> -->
-        <p> {{item?.timestamp | date:'short'}}</p>
+        <p class="time"> {{item?.timestamp | date:'short'}}</p>
         <div class="bubble me" *ngIf="item.sender === this.buddy.id">
           <h3>{{item.message}}</h3>
         </div>

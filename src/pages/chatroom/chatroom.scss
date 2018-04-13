@@ -44,11 +44,14 @@ page-chatroom {
     }
     
     .you::before {
-        box-shadow: 2px -2px 2px 0 rgba( 100, 100, 178, .4 );
+        box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
         right: -9px;    
     }
     
     .chatwindow {
         padding-bottom: 70px;
+    }
+    .time{
+        text-align: center;
     }
 }

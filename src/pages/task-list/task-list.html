@@ -7,6 +7,11 @@
 <ion-header>
 
   <ion-navbar>
+      <ion-buttons start>
+          <button ion-button (click)="openNotif()" >
+          <ion-icon name="notifications"></ion-icon>
+        </button>
+        </ion-buttons>
     <ion-title>Browse Task</ion-title>
   </ion-navbar>
 
@@ -14,8 +19,15 @@
 
 
 <ion-content >
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles">  
+      </ion-refresher-content>
+    </ion-refresher>
     <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-    <button ion-button full outline (click)="openFilter()">Filter Tasks
+    <button ion-button full outline (click)="openFilter()">Filter Task
     </button>
   <div *ngIf="taskList?.length== 0">
     NO TASKS AVAILABLE
@@ -26,7 +38,7 @@
     <ion-avatar item-start>
       <img src={{task?.posterimg}} />
     </ion-avatar>
-    <h2>{{task?.name}}</h2>
+    <h2 text-capitalize>{{task?.name}}</h2>
     <p *ngIf="(task?.location)"><ion-icon name="pin" class="icon1"></ion-icon> {{task?.location}}</p>
     <p *ngIf="!(task?.location)"><ion-icon name="pin" class="icon1"></ion-icon> online</p>
     <p><ion-icon name="calendar" class="icon1"></ion-icon>{{task?.date | date:'longDate' }}</p>
