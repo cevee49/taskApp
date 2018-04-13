@@ -27,14 +27,16 @@ export class ChatListPage {
     console.log('ionViewDidLoad ChatListPage');
 
     
-    this.chatProvider.getChatList().on("value", chatListSnapshot => {
+    this.chatProvider.getChatList()
+    .orderByChild('timestamp')
+    .on("value", chatListSnapshot => {
       this.chatlist = [];
       chatListSnapshot.forEach(snap => {
         console.log(snap.val().lastmsg);
         this.chatlist.push({
           id: snap.key,
           lastmsg: snap.val().lastmsg,
-          timestamp: snap.val().timestamp,
+          timestamp: 0-snap.val().timestamp,
           taskId: snap.val().taskId,
           buddyId: snap.val().buddyId
         });

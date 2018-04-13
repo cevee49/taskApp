@@ -41,6 +41,14 @@ export class SignupPage {
       password: [
         "",
         Validators.compose([Validators.minLength(6), Validators.required])
+      ],
+      firstName: [
+        "",
+        Validators.compose([Validators.required])
+       ],
+      lastName:[
+        "",
+        Validators.compose([Validators.required])
       ]
     });
   }
@@ -53,7 +61,9 @@ export class SignupPage {
     } else {
       const email: string = this.signupForm.value.email;
       const password: string = this.signupForm.value.password;
-      this.authProvider.signupUser(email, password).then(
+      const firstName: string = this.signupForm.value.firstName;
+      const lastName: string = this.signupForm.value.lastName;
+      this.authProvider.signupUser(email, password, firstName, lastName).then(
         user => {
           this.loading.dismiss().then(() => {
           this.navCtrl.setRoot(MainPage);

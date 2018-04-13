@@ -18,6 +18,7 @@
     <ion-item *ngFor="let chat of chatlist"
     (click)="goToChatroom(chat?.taskId, chat?.buddyId)">
     <h2>{{chat?.lastmsg}}</h2>
+    <p> {{chat?.timestamp | date:'short'}}</p>
     <!-- <p>Pay: <strong>${{task?.budget}}</strong></p>
     <p>Date: <strong>{{task?.date}}</strong></p> -->
     </ion-item>

@@ -33,7 +33,7 @@ export class ChatroomPage {
         this.buddy.id = buddySnapshot.key;
         this.buddy.email = buddySnapshot.val().email;
     });
-    this.chatProvider.getMessages(this.navParams.get("taskId")).on("value", chatSnapshot => {
+    this.chatProvider.getMessages(this.navParams.get("taskId"), this.navParams.get("buddyId")).on("value", chatSnapshot => {
       this.allmessages = [];
       chatSnapshot.forEach(snap => {
         console.log(snap.val().message);

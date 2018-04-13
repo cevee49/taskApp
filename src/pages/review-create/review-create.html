@@ -1,0 +1,41 @@
+<!--
+  Generated template for the ReviewCreatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+  <ion-navbar>
+    <ion-title>reviewCreate</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <form [formGroup]="reviewForm" (click)="addReview()">
+  <rating formControlName="rate" 
+        readOnly="false" 
+        max="5" 
+        emptyStarIconName="star-outline" 
+        halfStarIconName="star-half" 
+        starIconName="star" 
+        nullable="false" 
+  > 
+        <!-- (ngModelChange)="onModelChange($event)" -->
+</rating>
+<p>Please rate your experience between 1-5 stars!</p>
+<!-- <ion-item class="error-message" *ngIf="!reviewForm.controls.rate.valid && reviewForm.controls.rate.dirty">
+  <p>Please rate your experience between 1-5 stars!</p>
+</ion-item> -->
+<div id="rating">{{rate}}/5 stars</div>
+<ion-item>
+  <ion-label stacked>Tell us about your experience</ion-label>
+  <ion-textarea formControlName="review" type="text"
+  placeholder="Describe your experience">
+  </ion-textarea>
+</ion-item>
+<button ion-button color="light" type="submit" [disabled]="!reviewForm.valid" >Let us know!</button>
+</form>
+</ion-content>

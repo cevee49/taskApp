@@ -132,4 +132,8 @@ export class ProfilePage {
         }
       );
   }
+
+  openReview(){
+    this.navCtrl.push('ReviewListPage');
+  }
 }

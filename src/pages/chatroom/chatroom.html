@@ -25,6 +25,7 @@
         <!-- <ion-avatar item-left *ngIf="item.sender === this.buddy.id">
           <img src="{{buddy.photoURL}}">
         </ion-avatar> -->
+        <p> {{item?.timestamp | date:'short'}}</p>
         <div class="bubble me" *ngIf="item.sender === this.buddy.id">
           <h3>{{item.message}}</h3>
         </div>
