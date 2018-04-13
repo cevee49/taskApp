@@ -45,7 +45,6 @@ export class TaskProvider {
     taskerNumber: number
     // taskPoster: string
   ): PromiseLike<any> {
-    const userId: string = firebase.auth().currentUser.uid;
     let newTaskKey = this.taskListRef.push().key;
     return this.taskListRef.child(`${newTaskKey}`).update({
       name: taskName,
@@ -157,7 +156,8 @@ export class TaskProvider {
   addTasker (taskId: string, taskerId: string) : PromiseLike<any> {
     return this.candidateRef.child(`${taskId}/${taskerId}`).update({
       status: `tasker`,
-      completed: false
+      completed: false,
+      review: false
     })
     // .then(()=>{
     //     this.userTaskOfferRef.child(`${taskerId}/${taskId}`).update({

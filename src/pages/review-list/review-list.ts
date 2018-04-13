@@ -36,6 +36,7 @@ export class ReviewListPage {
     .on("value", taskerSnapshot => {
       this.taskerReviewList = [];
       taskerSnapshot.forEach(snap => {
+        console.log(taskerSnapshot.val());
         this.profileProvider.getOtherProfile(snap.val().posterId).on("value", userProfileSnapshot => {
           var firstName= userProfileSnapshot.val().firstName;
           var lastName= userProfileSnapshot.val().lastName;
@@ -77,5 +78,11 @@ export class ReviewListPage {
      });
   });
   }
+
+  openProfile(userId):void{
+    // console.log("tapped");
+    this.navCtrl.push('ProfilePage', {userId:userId});
+  }
+
 
 }

@@ -6,7 +6,8 @@ import {
   NavController,
   NavParams,
   Loading,
-  LoadingController
+  LoadingController,
+  PopoverController
   } from "ionic-angular";
   import { ProfileProvider } from "../../providers/profile/profile";
   import { AuthProvider } from "../../providers/auth/auth";
@@ -25,7 +26,7 @@ import {
 })
 export class ProfilePage {
   public userProfile: any;
-  public loading: Loading;
+  public loading: Loading =null;
   rate;
   review;
   // public profilePic: string= null;
@@ -37,7 +38,8 @@ export class ProfilePage {
     public profileProvider: ProfileProvider,
     public navParams: NavParams,
     public cameraPlugin: Camera,
-    public loadingCtrl : LoadingController
+    public loadingCtrl : LoadingController,
+    public popoverCtrl: PopoverController
     ) {}
 
   ionViewDidLoad() {
@@ -45,6 +47,13 @@ export class ProfilePage {
     this.review = `tasker`;
     this.loading = this.loadingCtrl.create();
     this.loading.present();
+    setTimeout(() => {
+      if(this.loading != null){
+        this.loading.dismiss();
+        this.loading =null;
+      }
+    }, 10000);
+
     if(this.navParams.get("userId")){
       this.profileProvider.getOtherProfile(this.navParams.get("userId")).on("value", userProfileSnapshot => {
         this.userProfile = userProfileSnapshot.val();
@@ -56,8 +65,10 @@ export class ProfilePage {
         this.userProfile.posterReviewAve = userProfileSnapshot.val().posterReviewAve;
         this.userProfile.taskerReviewAve = userProfileSnapshot.val().taskerReviewAve;
         this.rate = this.userProfile.taskerReviewAve;
-        console.log(this.userProfile.taskerReview);
-        this.loading.dismiss();
+        if(this.loading != null){
+          this.loading.dismiss();
+          this.loading =null;
+        }
       })
     } else {
       this.profileProvider.getUserProfile().on("value", userProfileSnapshot => {
@@ -70,8 +81,10 @@ export class ProfilePage {
         this.userProfile.posterReviewAve = userProfileSnapshot.val().posterReviewAve;
         this.userProfile.taskerReviewAve = userProfileSnapshot.val().taskerReviewAve;
         this.rate = this.userProfile.taskerReviewAve;
-        console.log(this.userProfile.taskerReview);
-        this.loading.dismiss();
+        if(this.loading != null){
+          this.loading.dismiss();
+          this.loading =null;
+        }
       })
      
     }
@@ -91,5 +104,10 @@ export class ProfilePage {
   
   editProfile(){
     this.navCtrl.push('EditProfilePage');
+  }
+  presentPopover() {
+    // let popover = this.popoverCtrl.create('NavSettingPage',{}, { cssClass: 'custom-popover'});
+    // popover.present();
+    this.navCtrl.push('NavSettingPage');
   }
 }

@@ -4,13 +4,14 @@ import { Component, ViewChild } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { Config, Nav, Platform } from 'ionic-angular';
+import { Config, Nav, Platform, NavController, Alert,AlertController, } from 'ionic-angular';
 import { FirstRunPage } from '../pages/pages';
 import { MainPage } from '../pages/pages';
 import { Settings } from '../providers/providers';
-import { BrowsePage} from '../pages/browse/browse';
-import { PostTaskPage} from '../pages/post-task/post-task';
+// import { BrowsePage} from '../pages/browse/browse';
 import { FCM } from '@ionic-native/fcm';
+import { Network } from '@ionic-native/network';
+
 
 @Component({
   template: `<ion-menu [content]="content">
@@ -37,6 +38,7 @@ export class MyApp {
    
 
   @ViewChild(Nav) nav: Nav;
+  @ViewChild('content') navCtrl: NavController;
 
   pages: any[] = [
     { title: 'Tutorial', component: 'TutorialPage' },
@@ -62,7 +64,10 @@ export class MyApp {
     private config: Config, 
     private statusBar: StatusBar, 
     private splashScreen: SplashScreen,
-    public fcm: FCM
+    public fcm: FCM,
+    public network: Network,
+    public alertCtrl: AlertController,
+    
   ) {
     this.initTranslate();
     firebase.initializeApp(firebaseConfig);
@@ -76,16 +81,40 @@ export class MyApp {
       }
     });
 
-  }
-
-  ionViewDidLoad() {
     this.platform.ready().then(() => {
+      this.fcm.onNotification().subscribe( data =>{
+        if(data.wasTapped){
+          unsubscribe();
+          console.log(JSON.stringify(data));
+          this.navCtrl.push('ChatRoomPage');
+        }else {
+          console.log(JSON.stringify(data));
+          this.navCtrl.push('ChatRoomPage');
+        }
+      })
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       console.log("I'm alive!");
       this.splashScreen.hide();
     });
+
+  }
+
+  ionViewDidLoad() {
+    this.network.onDisconnect().subscribe(data => {
+      console.log(data);
+      const alert: Alert = this.alertCtrl.create({
+        title: "No internet connection",
+        message: "Please check your connection and try again",
+        buttons: ['Dismiss']
+      });
+      alert.present();  
+    }, error => console.error(error));
+    this.network.onConnect().subscribe(data => {
+      console.log("network", data)
+      // this.displayNetworkUpdate(data.type);
+    }, error => console.error(error));
   }
 
   initTranslate() {
@@ -103,9 +132,9 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  }
+  // openPage(page) {
+  //   // Reset the content nav to have just this page
+  //   // we wouldn't want the back button to show in this scenario
+  //   this.nav.setRoot(page.component);
+  // }
 }

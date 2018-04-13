@@ -30,7 +30,7 @@ export class TaskListPage {
   searching: any = false;
   public filterForm: FormGroup;
   public posterimg: any;
-  public loading: Loading;
+  public loading: Loading=null ;
   badge: number = 1;
 
   constructor(
@@ -54,6 +54,12 @@ export class TaskListPage {
     console.log('ionViewDidLoad TaskListPage');
     this.loading = this.loadingCtrl.create();
     this.loading.present();
+    setTimeout(() => {
+      if(this.loading != null){
+        this.loading.dismiss();
+        this.loading =null;
+      }
+    }, 10000);
     this.taskProvider.getTaskList().on("value", taskListSnapshot => {
       let tasks = [];
       taskListSnapshot.forEach(snap => {
@@ -81,8 +87,20 @@ export class TaskListPage {
       });
       this.taskList = tasks;
       this.loadedTaskList = tasks;   
-      this.loading.dismiss();
+      if(this.loading != null){
+        this.loading.dismiss();
+        this.loading =null;
+      }
     })
+  }
+
+  doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
+    this.ionViewDidLoad();
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      refresher.complete();
+    }, 2000);
   }
 
   goToTaskDetail(taskId):void{
@@ -159,7 +177,7 @@ export class TaskListPage {
     this.navCtrl.push('TaskCreatePage');
   }
 
-  // openChatlist(){
-  //   this.navCtrl.push('ChatListPage');
-  // }
+  openNotif(){
+    this.navCtrl.push('NotificationListPage',  {}, {animate: true, direction: `back`});
+  }
 }

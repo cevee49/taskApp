@@ -42,6 +42,7 @@ export class ChatProvider {
       lastmsg: msg, 
       timestamp: 0- Date.now(),
       buddyId: buddyId,
+      sender: this.userId,
       read: true
     }).then (() => {
       this.chatRoomRef.child(`${buddyId}/${roomId}`).update({
@@ -49,6 +50,7 @@ export class ChatProvider {
         lastmsg: msg, 
         timestamp: 0- Date.now(),
         buddyId: this.userId,
+        sender: this.userId,
         read: false
       });
     }).then (() => {
@@ -73,6 +75,7 @@ export class ChatProvider {
   }
 
   setRead(taskId: string, buddyId: string): PromiseLike <any>{
+    console.log(taskId);
     const roomId ='chat_'+ taskId+'_'+ (buddyId<this.userId ? buddyId+'_'+this.userId : this.userId+'_'+buddyId);
     return this.chatRoomRef.child(`${this.userId}/${roomId}`).update({
       read: true

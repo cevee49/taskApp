@@ -7,13 +7,18 @@
 <ion-header>
 
   <ion-navbar>
+      <!-- <ion-buttons start>
+          <button ion-button (click)="openNotif()" >
+          <ion-icon name="notifications"></ion-icon>
+        </button>
+        </ion-buttons> -->
     <ion-title>Profile</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="logOut()">
+      <!-- <button ion-button icon-only (click)="logOut()">
       <ion-icon name="log-out"></ion-icon>
-      </button>
-      <button ion-button icon-only (click)="editProfile()">
-        <ion-icon name="create"></ion-icon>
+      </button> -->
+      <button end ion-button icon-only (click)="presentPopover()">
+        <ion-icon name="more"></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
@@ -23,15 +28,15 @@
 
 <ion-content padding>
   <ion-list>
-    <div id="profile-bg"></div>
-      <div id="content">
-        <div id="profile-info">
+    <!-- <div id="profile-bg"></div>
+      <div id="content"> -->
+        <div id="profile-info" class="profile-image">
           <img id="profile-image" src="{{userProfile?.photo}}">
-          <h3 id="profile-name">{{userProfile?.firstName}} {{userProfile?.lastName}}</h3>
+          <h3 id="profile-name" text-capitalize>{{userProfile?.firstName}} {{userProfile?.lastName}}</h3>
           <!-- <span id="profile-description">Co-creator of <a href="https://twitter.com/ionicframework">@ionicframework</a>, founder of
             <a href="https://twitter.com/driftyco">@driftyco</a></span> -->
         </div>
-      </div>
+      <!-- </div> -->
       <div>
         <ion-segment [(ngModel)]="review">
           <ion-segment-button value="tasker">
@@ -54,8 +59,8 @@
               *ngIf="( userProfile?.taskerReview>0 )"
               >  
             </rating>
-              <div *ngIf="( userProfile?.taskerReview==0) ">
-                  No review yet
+              <div  *ngIf="( userProfile?.taskerReview==0) ">
+                <p class="nolist">No review yet</p> 
               </div>  
           </div>
           <div *ngSwitchCase="'poster'">
@@ -68,20 +73,22 @@
               nullable="false" 
               *ngIf="( userProfile?.posterReview>0 )">  
             </rating>
-            <div *ngIf="( userProfile?.posterReview==0) ">
+            <div class="nolist" *ngIf="( userProfile?.posterReview==0) ">
                 No review yet
             </div>  
           </div>
          
         </div>
         
+    <div class="fullbtn">
+        <button ion-button outline
+      (click)="openReview()">
+      SEE FULL REVIEWS
+    </button>
+    </div>
 
-  <button ion-button block
-  (click)="openReview()">
-  See full review
-</button>
    <ion-item>
-      <h2>ABOUT ME</h2>
+      <h2>About Me</h2>
       <p>{{userProfile?.aboutMe}}</p>
    </ion-item>
   </ion-list>
