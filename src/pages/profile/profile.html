@@ -12,6 +12,9 @@
       <button ion-button icon-only (click)="logOut()">
       <ion-icon name="log-out"></ion-icon>
       </button>
+      <button ion-button icon-only (click)="editProfile()">
+        <ion-icon name="create"></ion-icon>
+        </button>
     </ion-buttons>
   </ion-navbar>
 
@@ -20,71 +23,67 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-list-header>
-      Personal Information
-    </ion-list-header>
     <div id="profile-bg"></div>
       <div id="content">
         <div id="profile-info">
-          <img id="profile-image" src={{userProfile?.picture}}>
-          <h3 id="profile-name">Max</h3>
-          <span id="profile-description">Co-creator of <a href="https://twitter.com/ionicframework">@ionicframework</a>, founder of
-            <a href="https://twitter.com/driftyco">@driftyco</a></span>
+          <img id="profile-image" src="{{userProfile?.photo}}">
+          <h3 id="profile-name">{{userProfile?.firstName}} {{userProfile?.lastName}}</h3>
+          <!-- <span id="profile-description">Co-creator of <a href="https://twitter.com/ionicframework">@ionicframework</a>, founder of
+            <a href="https://twitter.com/driftyco">@driftyco</a></span> -->
         </div>
       </div>
-      <button ion-button icon-only (click)="takePicture()">
-        <ion-icon name="camera"></ion-icon>
-        </button>
-        <rating [(ngModel)]="rate" 
-        readOnly="true" 
-        max="5" 
-        emptyStarIconName="star-outline" 
-        halfStarIconName="star-half" 
-        starIconName="star" 
-        nullable="false" 
-        >    
-  </rating>
+      <div>
+        <ion-segment [(ngModel)]="review">
+          <ion-segment-button value="tasker">
+          As Tasker
+          </ion-segment-button>
+          <ion-segment-button value="poster">
+           As Poster
+          </ion-segment-button>
+        </ion-segment>   
+      </div>
+      <div [ngSwitch]="review">
+          <div *ngSwitchCase="'tasker'">
+              <rating [(ngModel)]="userProfile.taskerReviewAve" 
+              readOnly="true" 
+              max="5" 
+              emptyStarIconName="star-outline" 
+              halfStarIconName="star-half" 
+              starIconName="star" 
+              nullable="false" 
+              *ngIf="( userProfile?.taskerReview>0 )"
+              >  
+            </rating>
+              <div *ngIf="( userProfile?.taskerReview==0) ">
+                  No review yet
+              </div>  
+          </div>
+          <div *ngSwitchCase="'poster'">
+              <rating [(ngModel)]="userProfile.posterReviewAve" 
+              readOnly="true" 
+              max="5" 
+              emptyStarIconName="star-outline" 
+              halfStarIconName="star-half" 
+              starIconName="star" 
+              nullable="false" 
+              *ngIf="( userProfile?.posterReview>0 )">  
+            </rating>
+            <div *ngIf="( userProfile?.posterReview==0) ">
+                No review yet
+            </div>  
+          </div>
+         
+        </div>
+        
+
   <button ion-button block
   (click)="openReview()">
   See full review
 </button>
-    <ion-item (click)="updateName()">
-        <ion-grid>
-          <ion-row>
-            <ion-col col-6> Name </ion-col>
-            <ion-col col-6 *ngIf="userProfile?.firstName || userProfile?.lastName">
-              {{userProfile?.firstName}} {{userProfile?.lastName}}
-            </ion-col>
-            <ion-col col-6 class="placeholder-profile"
-            *ngIf="!userProfile?.firstName">
-              <span> Tap here to edit. </span>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-    </ion-item>
-    <ion-item (click)="updateEmail()">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-6> Email </ion-col>
-          <ion-col col-6 *ngIf="userProfile?.email">
-          {{userProfile?.email}}
-          </ion-col>
-          <ion-col col-6 class="placeholder-profile" *ngIf="!userProfile?.email">
-           <span> Tap here to edit. </span>
-         </ion-col>
-        </ion-row>
-     </ion-grid>
-    </ion-item>
-    <ion-item (click)="updatePassword()">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-6> Password </ion-col>
-          <ion-col col-6 class="placeholder-profile">
-            <span> Tap here to edit. </span>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+   <ion-item>
+      <h2>ABOUT ME</h2>
+      <p>{{userProfile?.aboutMe}}</p>
+   </ion-item>
   </ion-list>
 
 </ion-content>

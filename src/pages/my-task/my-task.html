@@ -31,17 +31,20 @@
       <ion-item *ngFor="let postedTask of postedTaskList"
         (click)="goToTaskDetail(postedTask.id)">
         <ion-avatar item-start>
-          <img [src]="postedTask?.profilePicture" />
+          <img src={{postedTask?.photo}} />
         </ion-avatar>
         <h2>{{postedTask?.name}}</h2>
-        <p>Pay: <strong>${{postedTask?.budget}}</strong></p>
-        <p>Date: <strong>{{postedTask?.date}}</strong></p>
-        <!-- <div  *ngIf="(task?.tasker == null)">
-          <p>OPEN</p>
+        <p *ngIf="(postedTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> {{postedTask?.location}}</p>
+        <p *ngIf="!(postedTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> online</p>
+        <p><ion-icon name="calendar" class="icon1"></ion-icon>{{postedTask?.date | date:'longDate' }}</p>
+        <p *ngIf="((postedTask?.taskerNumber-postedTask?.assignNumber) >1)" class="icon1"><ion-icon name="contacts"></ion-icon>{{postedTask?.taskerNumber}} taskers </p>
+        <p *ngIf="((postedTask?.taskerNumber-postedTask?.assignNumber) ==1)" class="icon1"><ion-icon name="contacts"></ion-icon> {{postedTask?.taskerNumber}} tasker </p>
+        <div item-end >
+            <p  class="price">${{postedTask?.budget}}</p>
+            <ion-badge *ngIf="((postedTask?.taskerNumber-postedTask?.assignNumber) >0)" class="open">OPEN</ion-badge>
+            <ion-badge *ngIf="(postedTask?.taskerNumber == postedTask?.completedNumber)" class="assigned">COMPLETED</ion-badge>
+            <ion-badge *ngIf="(postedTask?.taskerNumber == postedTask?.assignNumber) && (postedTask?.taskerNumber != postedTask?.completedNumber)" class="assigned"  color="blur">ASSIGNED</ion-badge>
         </div>
-        <div  *ngIf="(task?.tasker != null)">
-          <p>ASSIGNED</p>
-        </div> -->
       </ion-item>
     </ion-list>
 
@@ -49,17 +52,20 @@
       <ion-item *ngFor="let offeredTask of offeredTaskList"
         (click)="goToTaskDetail(offeredTask.id)">
     <ion-avatar item-start>
-      <img [src]="offeredTask?.profilePicture" />
+      <img src={{offeredTask?.photo}} />
     </ion-avatar>
     <h2>{{offeredTask?.name}}</h2>
-    <p>Pay: <strong>${{offeredTask?.budget}}</strong></p>
-    <p>Date: <strong>{{offeredTask?.date}}</strong></p>
-    <!-- <div  *ngIf="(task?.tasker == null)">
-      <p>OPEN</p>
-    </div>
-    <div  *ngIf="(task?.tasker != null)">
-      <p>ASSIGNED</p>
-    </div> -->
+        <p *ngIf="(offeredTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> {{offeredTask?.location}}</p>
+        <p *ngIf="!(offeredTask?.location)"><ion-icon name="pin" class="icon1"></ion-icon> online</p>
+        <p><ion-icon name="calendar" class="icon1"></ion-icon> {{offeredTask?.date | date:'longDate' }}</p>
+        <p *ngIf="(offeredTask?.taskerNumber >1)" class="icon1"><ion-icon name="contacts"></ion-icon> {{offeredTask?.taskerNumber}} taskers </p>
+        <p *ngIf="(offeredTask?.taskerNumber ==1)" class="icon1"><ion-icon name="contacts"></ion-icon> {{offeredTask?.taskerNumber}} tasker </p>
+        <div item-end >
+            <p  class="price">${{offeredTask?.budget}}</p>
+            <ion-badge  *ngIf="((offeredTask?.taskerNumber-offeredTask?.assignNumber) >0)" class="open">OPEN</ion-badge>
+            <ion-badge *ngIf="(offeredTask?.taskerNumber == offeredTask?.completedNumber)" class="assigned">COMPLETED</ion-badge>
+            <ion-badge *ngIf="(offeredTask?.taskerNumber == offeredTask?.assignNumber) && (offeredTask?.taskerNumber != offeredTask?.completedNumber)" class="assigned"  color="blur">ASSIGNED</ion-badge>
+        </div>
       </ion-item>
     </ion-list>
 

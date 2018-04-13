@@ -7,9 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>TaskList</ion-title>
-    <button ion-fab mini (click)="openChatlist()"><ion-icon name="mail" ></ion-icon>
-    </button>
+    <ion-title>Browse Task</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -17,26 +15,28 @@
 
 <ion-content >
     <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-    <button ion-fab mini (click)="openFilter()"><ion-icon name="funnel" ></ion-icon>
+    <button ion-button full outline (click)="openFilter()">Filter Tasks
     </button>
-    <div *ngIf="searching" class="spinner-container">
-      <ion-spinner></ion-spinner>
+  <div *ngIf="taskList?.length== 0">
+    NO TASKS AVAILABLE
   </div>
   <ion-list>
     <ion-item *ngFor="let task of taskList"
     (click)="goToTaskDetail(task.id)">
     <ion-avatar item-start>
-      <img [src]="task?.profilePicture" />
+      <img src={{task?.posterimg}} />
     </ion-avatar>
     <h2>{{task?.name}}</h2>
-    <p>Pay: <strong>${{task?.budget}}</strong></p>
-    <p>Date: <strong>{{task?.date}}</strong></p>
-    <p>Available position: <strong>{{task?.taskerNumber}}</strong></p>
-    <div  *ngIf="(task?.taskerNumber >0)">
-      <p>OPEN</p>
-    </div>
-    <div  *ngIf="(task?.taskerNumber ==0)">
-      <p>ASSIGNED</p>
+    <p *ngIf="(task?.location)"><ion-icon name="pin" class="icon1"></ion-icon> {{task?.location}}</p>
+    <p *ngIf="!(task?.location)"><ion-icon name="pin" class="icon1"></ion-icon> online</p>
+    <p><ion-icon name="calendar" class="icon1"></ion-icon>{{task?.date | date:'longDate' }}</p>
+    <p *ngIf="((task?.taskerNumber-task?.assignNumber)>1)" class="icon1"><ion-icon name="contacts"></ion-icon> {{task?.taskerNumber-task?.assignNumber}} taskers </p>
+    <p *ngIf="((task?.taskerNumber-task?.assignNumber) ==1)" class="icon1"><ion-icon name="contacts"></ion-icon> {{task?.taskerNumber-task?.assignNumber}} tasker </p>
+    <div item-end >
+        <p  class="price">${{task?.budget}}</p>
+        <ion-badge *ngIf="((task?.taskerNumber-task?.assignNumber) >0)" class="open">OPEN</ion-badge>
+        <ion-badge *ngIf="(task?.taskerNumber == task?.completedNumber)" class="assigned">COMPLETED</ion-badge>
+        <ion-badge *ngIf="(task?.taskerNumber == task?.assignNumber)&&(task?.taskerNumber != task?.completedNumber)" class="assigned"  color="blur">ASSIGNED</ion-badge>
     </div>
     </ion-item>
   </ion-list>

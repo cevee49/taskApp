@@ -1,8 +1,17 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController  } from 'ionic-angular';
+import { 
+  IonicPage, 
+  NavController, 
+  NavParams, 
+  ModalController, 
+  Loading,
+  LoadingController, 
+  Events
+} from 'ionic-angular';
 import { TaskProvider } from "../../providers/task/task";
+import { ProfileProvider } from "../../providers/profile/profile";
 import { LocationProvider } from "../../providers/location/location";
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 /**
  * Generated class for the TaskListPage page.
  *
@@ -19,14 +28,23 @@ export class TaskListPage {
   public taskList: Array<any>;
   public loadedTaskList: Array<any>;
   searching: any = false;
-
+  public filterForm: FormGroup;
+  public posterimg: any;
+  public loading: Loading;
+  badge: number = 1;
 
   constructor(
     public navCtrl: NavController, 
     public taskProvider: TaskProvider,
+    public profileProvider: ProfileProvider,
     public locationProvider: LocationProvider,
-    public modalCtrl: ModalController
-  ) {}
+    public modalCtrl: ModalController,
+    public loadingCtrl: LoadingController,
+    public events: Events,
+    formBuilder: FormBuilder
+  ) {
+    
+  }
 
   initializeItems():void {
     this.taskList = this.loadedTaskList;
@@ -34,26 +52,36 @@ export class TaskListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TaskListPage');
+    this.loading = this.loadingCtrl.create();
+    this.loading.present();
     this.taskProvider.getTaskList().on("value", taskListSnapshot => {
       let tasks = [];
       taskListSnapshot.forEach(snap => {
-        tasks.push({
-          id: snap.key,
-          name: snap.val().name,
-          date: snap.val().date,
-          category: snap.val().category,
-          location: snap.val().location.place,
-          lat :snap.val().location.latitude,
-          lng :snap.val().location.longitude,
-          description: snap.val().description,
-          budget: parseInt(snap.val().budget), 
-          taskerNumber: snap.val().taskerNumber,
-        });
+        this.profileProvider.getOtherProfile(snap.val().poster).on("value", userProfileSnapshot => {
+          this.posterimg = userProfileSnapshot.val().photo;
+          tasks.push({
+            id: snap.key,
+            name: snap.val().name,
+            date: snap.val().date,
+            category: snap.val().category,
+            location: snap.val().location.place,
+            lat :snap.val().location.latitude,
+            lng :snap.val().location.longitude,
+            description: snap.val().description,
+            budget: parseInt(snap.val().budget), 
+            taskerNumber: snap.val().taskerNumber,
+            assignNumber: snap.val().assignNumber,
+            completedNumber: snap.val().completedNumber,
+            status:snap.val().status,
+            posterimg :userProfileSnapshot.val().photo
+          });
+        })
         
         return false;
       });
       this.taskList = tasks;
       this.loadedTaskList = tasks;   
+      this.loading.dismiss();
     })
   }
 
@@ -84,6 +112,8 @@ export class TaskListPage {
   openFilter(){
     let modal = this.modalCtrl.create('TaskFilterPage');
     modal.onDidDismiss(data => {
+      this.loading = this.loadingCtrl.create();
+      this.loading.present();
       const taskCat = data.taskCat;
       const lat = data.lat;
       const lng = data.lng;
@@ -92,26 +122,23 @@ export class TaskListPage {
       const min = data.min;
       const max = data.max;
       const distance = data.distance;
-      
-      this.taskList = this.loadedTaskList.filter((v) => {
-        
-        if(v.category && taskCat != "All categories") {
+      this.taskList = this.loadedTaskList.filter((v) => {       
+        if(v.category && taskCat != "All categories" ) {
           if(v.category !=taskCat  ) {
             return false;
           }
         }
-        if(v.location && type != `All`){
-          if((type===`Online` && v.location!=`online`) ||(type===`In person` && v.location ===`online`) ){
+        if(v.location && type != `All` ){
+          if((type===`Online` && v.location!=`Online`) ||(type===`In person` && v.location ===`Online`) ){
             return false;
           }
         }
-        console.log(this.locationProvider.applyHaversine(v.lat,v.lng, lat, lng));
-        if(v.lat &&v.lng && distance != `50+`) {
+        if(v.lat &&v.lng && distance != `50+` && lat && lng) {
             if(this.locationProvider.applyHaversine(v.lat,v.lng, lat, lng)>distance) {
                 return false;
           }  
         }
-        if(v.budget!= null){
+        if(v.budget!= null && min!=null && max!=null){
           if(v.budget<min || v.budget>max){
             return false;
           }
@@ -123,30 +150,16 @@ export class TaskListPage {
         }
         return true;
       });
-       
-      
-      
+      this.loading.dismiss();
     });
     modal.present();
-  
- 
-
-    // this.taskList = this.taskList.filter((v) => {
-    //   if(v.lat &&v.lng) {
-    //     if(this.locationProvider.applyHaversine(v.lat,v.lng, lat, lng)<50) {
-    //       return true;
-    //     }
-    //     return false;
-    //   }
-    // });
-
   }
 
   postTask(){
     this.navCtrl.push('TaskCreatePage');
   }
 
-  openChatlist(){
-    this.navCtrl.push('ChatListPage');
-  }
+  // openChatlist(){
+  //   this.navCtrl.push('ChatListPage');
+  // }
 }

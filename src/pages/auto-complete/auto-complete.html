@@ -8,8 +8,8 @@
 
   <ion-navbar>
       <ion-toolbar>
-          <ion-title>Enter address</ion-title>
-          <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true"   (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
+          <!-- <div class="title"><ion-title>Enter address</ion-title></div> -->
+          <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true" (ionInput)="updateSearch()" (ionCancel)="dismiss()" placeholder="Enter Address"></ion-searchbar>
         </ion-toolbar>
   </ion-navbar>
 

@@ -22,6 +22,8 @@ import { ChatProvider } from '../providers/chat/chat';
 import { ReviewProvider } from '../providers/review/review';
 import { Ionic2RatingModule } from "ionic2-rating";
 import { LocationProvider } from '../providers/location/location';
+import { ImghandlerProvider } from '../providers/imghandler/imghandler';
+import { FCM } from '@ionic-native/fcm';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -58,7 +60,9 @@ export function provideSettings(storage: Storage) {
         deps: [Http]
       }
     }),
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      tabsHideOnSubPages: true,
+    }),
     IonicStorageModule.forRoot(),
     Ionic2RatingModule
   ],
@@ -71,6 +75,7 @@ export function provideSettings(storage: Storage) {
     Items,
     User,
     Camera,
+    FCM,
     GoogleMaps,
     SplashScreen,
     StatusBar,
@@ -84,6 +89,7 @@ export function provideSettings(storage: Storage) {
     ChatProvider,
     ReviewProvider,
     LocationProvider,
+    ImghandlerProvider,
   ]
 })
 export class AppModule { }

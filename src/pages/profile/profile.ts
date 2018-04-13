@@ -4,7 +4,9 @@ import {
   AlertController,
   IonicPage,
   NavController,
-  NavParams
+  NavParams,
+  Loading,
+  LoadingController
   } from "ionic-angular";
   import { ProfileProvider } from "../../providers/profile/profile";
   import { AuthProvider } from "../../providers/auth/auth";
@@ -23,22 +25,56 @@ import {
 })
 export class ProfilePage {
   public userProfile: any;
+  public loading: Loading;
+  rate;
+  review;
   // public profilePic: string= null;
-
+  imgurl= "assets/img/defaultpicture.png";
   constructor(
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public authProvider: AuthProvider,
     public profileProvider: ProfileProvider,
-    public navParam: NavParams,
-    public cameraPlugin: Camera
+    public navParams: NavParams,
+    public cameraPlugin: Camera,
+    public loadingCtrl : LoadingController
     ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
-    this.profileProvider.getUserProfile().on("value", userProfileSnapshot => {
-      this.userProfile = userProfileSnapshot.val();
-    })
+    this.review = `tasker`;
+    this.loading = this.loadingCtrl.create();
+    this.loading.present();
+    if(this.navParams.get("userId")){
+      this.profileProvider.getOtherProfile(this.navParams.get("userId")).on("value", userProfileSnapshot => {
+        this.userProfile = userProfileSnapshot.val();
+        this.userProfile.firstName = userProfileSnapshot.val().firstName;
+        this.userProfile.lastName = userProfileSnapshot.val().lastName;
+        this.userProfile.photo = userProfileSnapshot.val().photo;
+        this.userProfile.posterReview = userProfileSnapshot.val().posterReview;
+        this.userProfile.taskerReview = userProfileSnapshot.val().taskerReview;
+        this.userProfile.posterReviewAve = userProfileSnapshot.val().posterReviewAve;
+        this.userProfile.taskerReviewAve = userProfileSnapshot.val().taskerReviewAve;
+        this.rate = this.userProfile.taskerReviewAve;
+        console.log(this.userProfile.taskerReview);
+        this.loading.dismiss();
+      })
+    } else {
+      this.profileProvider.getUserProfile().on("value", userProfileSnapshot => {
+        this.userProfile = userProfileSnapshot.val();
+        this.userProfile.firstName = userProfileSnapshot.val().firstName;
+        this.userProfile.lastName = userProfileSnapshot.val().lastName;
+        this.userProfile.photo = userProfileSnapshot.val().photo;
+        this.userProfile.posterReview = userProfileSnapshot.val().posterReview;
+        this.userProfile.taskerReview = userProfileSnapshot.val().taskerReview;
+        this.userProfile.posterReviewAve = userProfileSnapshot.val().posterReviewAve;
+        this.userProfile.taskerReviewAve = userProfileSnapshot.val().taskerReviewAve;
+        this.rate = this.userProfile.taskerReviewAve;
+        console.log(this.userProfile.taskerReview);
+        this.loading.dismiss();
+      })
+     
+    }
   }
 
   logOut() : void {
@@ -47,93 +83,13 @@ export class ProfilePage {
     });
   }
 
-  updateName() : void {
-    const alert: Alert = this.alertCtrl.create({
-      message: "Your first name & last name",
-      inputs: [
-        {
-          name: "firstName",
-          placeholder: "Your first name",
-          value: this.userProfile.firstName
-        },
-        {
-          name: "lastName",
-          placeholder: "Your last name",
-          value: this.userProfile.lastName
-        }
-      ],
-      buttons: [
-        {text: "Cancel" },
-        {
-          text: "Save",
-          handler: data => {
-            this.profileProvider.updateName(data.firstName, data.lastName);
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
-  updateEmail(): void {
-    let alert: Alert = this.alertCtrl.create({
-      inputs: [{ name: 'newEmail', placeholder: 'Your new email' },
-     { name: 'password', placeholder: 'Your password', type: 'password' }],
-     buttons: [
-       { text: 'Cancel' },
-       { text: 'Save',
-         handler: data => {
-          this.profileProvider
-            .updateEmail(data.newEmail, data.password)
-             .then(() => { console.log('Email Changed Successfully'); })
-             .catch(error => { console.log('ERROR: ' + error.message); });
-      }}]
-    });
-    alert.present();
-  }
-  updatePassword(): void {
-    let alert: Alert = this.alertCtrl.create({
-      inputs: [
-        { name: 'newPassword', placeholder: 'New password', type: 'password' },
-        { name: 'oldPassword', placeholder: 'Old password', type: 'password' }],
-      buttons: [
-        { text: 'Cancel' },
-        { text: 'Save',
-          handler: data => {
-          this.profileProvider.updatePassword(
-            data.newPassword,
-            data.oldPassword
-           );
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
-  takePicture(): void{
-    this.cameraPlugin 
-      .getPicture({
-        quality: 95,
-        destinationType: this.cameraPlugin.DestinationType.DATA_URL,
-        sourceType: this.cameraPlugin.PictureSourceType.CAMERA,
-        allowEdit: true,
-        encodingType: this.cameraPlugin.EncodingType.PNG,
-        targetWidth: 500,
-        targetHeight: 500,
-        saveToPhotoAlbum: true
-      })
-      .then(
-        imageData => {
-          this.userProfile.picture = imageData;
-        },
-        error => {
-          console.log("ERROR -> " + JSON.stringify(error));
-        }
-      );
-  }
+  
 
   openReview(){
-    this.navCtrl.push('ReviewListPage');
+    this.navCtrl.push('ReviewListPage', {userId:this.navParams.get("userId") });
+  }
+  
+  editProfile(){
+    this.navCtrl.push('EditProfilePage');
   }
 }

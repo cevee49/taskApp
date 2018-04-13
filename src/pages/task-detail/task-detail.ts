@@ -24,6 +24,9 @@ export class TaskDetailPage {
   public candidateList: Array<any>;
   public taskerList: Array<any>;
   public completedList: Array<any>;
+  public poster:any;
+  public usertasker:boolean = false;
+  public completed: boolean = false;
   
   constructor(
     public navCtrl: NavController, 
@@ -35,36 +38,52 @@ export class TaskDetailPage {
     private modalCtrl : ModalController
   ) {}
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     console.log('ionViewDidLoad TaskDetailPage');
     // this.userId = firebase.auth().currentUser.uid;
     this. taskProvider
     .getTaskDetail(this.navParams.get("taskId"))
-    .on("value", taskSnapshot => {
+    .once("value", taskSnapshot => {
+      if(taskSnapshot!=null){
       this.currentTask = taskSnapshot.val();
       this.currentTask.id = taskSnapshot.key;
       this.currentTask.date = taskSnapshot.val().date;
       this.currentTask.name = taskSnapshot.val().name;
-      this.currentTask.poster = taskSnapshot.val().poster.posterId;
-      this.currentTask.posterName = taskSnapshot.val().poster.displayName;
+      this.currentTask.poster = taskSnapshot.val().poster;
+      this.currentTask.description = taskSnapshot.val().description;
+      this.currentTask.location = taskSnapshot.val().location.place;
       this.currentTask.createdAt= 0-taskSnapshot.val().createdAt;
-      this.currentTask.taskStatus = taskSnapshot.val().taskStatus;
-      this.currentTask.taskNumber = taskSnapshot.val().taskNumber;
-    });
+      this.currentTask.assignNumber = taskSnapshot.val().assignNumber;
+      this.currentTask.takerNumber = taskSnapshot.val().taskerNumber;
+      }
       
+    });
+    this.profileProvider.getOtherProfile(this.currentTask.poster).on("value", userProfileSnapshot => {
+     this.poster = userProfileSnapshot.val();
+     this.poster.photo = userProfileSnapshot.val().photo;
+     
+     this.poster.firstName= userProfileSnapshot.val().firstName;
+     this.poster.lastName= userProfileSnapshot.val().lastName;
+     this.poster.fullName = this.poster.firstName +` `+  this.poster.lastName.charAt(0) + `.`;
+     this
+    });
       this.taskProvider
       .getCandidate(this.navParams.get("taskId"))
       .orderByChild('status')
       .equalTo(`candidate`)
       .on("value", candidateSnapshot => {
-        console.log("candidateLisy");
         this.candidateList = [];
         candidateSnapshot.forEach(snap => {
-          console.log(snap.val().offerPrice);
-          this.candidateList.push({
+          this.profileProvider.getOtherProfile(snap.key).on("value", userProfileSnapshot => {
+            var firstName= userProfileSnapshot.val().firstName;
+            var lastName= userProfileSnapshot.val().lastName;
+            var fullName = firstName +` `+  lastName.charAt(0) + `.`;
+            this.candidateList.push({
             id: snap.key,
-            name: snap.val().displayName,
-            offerPrice: snap.val().offerPrice
+            name: fullName,
+            offerPrice: snap.val().offerPrice,
+            photo: userProfileSnapshot.val().photo
+            });
           });
         return false;
         });
@@ -77,13 +96,20 @@ export class TaskDetailPage {
      .on("value", taskerSnapshot => {
        this.taskerList = [];
        taskerSnapshot.forEach(snap => {
+         if(snap.key == this.userId){
+           this.usertasker =true;
+         }
+         this.profileProvider.getOtherProfile(snap.key).on("value", userProfileSnapshot => {
+          var firstName= userProfileSnapshot.val().firstName;
+          var lastName= userProfileSnapshot.val().lastName;
+          var fullName = firstName +` `+  lastName.charAt(0) + `.`;
          this.taskerList.push({
            id: snap.key,
-           name: snap.val().displayName,
-           completed: snap.val().completed
-          //  offerPrice: snap.val().offerPrice
+           name: fullName,
+           completed: snap.val().completed,
+           photo: userProfileSnapshot.val().photo
          });
-         console.log(snap.val().displayName);
+        });
        return false;
        });
     });
@@ -104,7 +130,7 @@ export class TaskDetailPage {
        { text: 'Make an Offer',
          handler: data => {
           alert.present();
-          this.taskProvider.addCandidate(this.currentTask.id, this.currentTask.name, this.currentTask.location,this.currentTask.date, data.offerPrice )
+          this.taskProvider.addCandidate(this.currentTask.poster,this.currentTask.id, this.currentTask.name, this.currentTask.location,this.currentTask.date, data.offerPrice )
       }}]
     });
     alert.present();  
@@ -127,9 +153,40 @@ export class TaskDetailPage {
     this.navCtrl.push('ChatroomPage', {buddyId: buddyId, taskId: taskId});
   }
   
+  openProfile(userId):void{
+    this.navCtrl.push('ProfilePage', {userId:userId});
+  }
+
   completeTask(taskerId): void{
     this.taskProvider.completeTask(this.currentTask.id, taskerId).then(()=>{
-      this.navCtrl.push('ReviewCreatePage', {taskId:this.currentTask.id, role: `tasker`, taskerId: taskerId, taskName: this.currentTask.name, poster: this.currentTask.poster, posterName: this.currentTask.posterName}); 
+      this.navCtrl.push('ReviewCreatePage', {taskId:this.currentTask.id, role: `tasker`, taskerId: taskerId, taskName: this.currentTask.name, poster: this.currentTask.poster}); 
     })
+  }
+
+  editTask(): void{
+    this.navCtrl.push('TaskUpdatePage', {taskId: this.currentTask.id});
+  }
+
+  deleteTask(): void {
+
+    let alert: Alert = this.alertCtrl.create({
+      title: "Confirm Deletion",
+      message: "Are you sure you want to delete this task?",
+      buttons: [
+      {
+        text: "Don't Delete",
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      },
+       { text: 'Delete',
+         handler: data => {
+          this.taskProvider.deleteTask(this.currentTask.id).then(() =>{
+            this.navCtrl.pop();
+          });
+      }}]
+    });
+    alert.present();  
   }
 }

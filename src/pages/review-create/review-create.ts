@@ -25,7 +25,7 @@ export class ReviewCreatePage {
   ) {
     this.reviewForm = formBuilder.group({
       rate: [
-        "",
+        "1",
         Validators.compose([Validators.required])
        ],
       review:[
@@ -37,6 +37,7 @@ export class ReviewCreatePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ReviewCreatePage');
+  
   }
 
   // addReview(rate: number, review: string):void{
@@ -49,9 +50,7 @@ export class ReviewCreatePage {
       this.navCtrl.pop();
       const rate: number =this.reviewForm.value.rate;
       const review: string =this.reviewForm.value.review; 
-      console.log(this.navParams.get("taskerId"));
-      console.log(this.navParams.get("posterName"));
-      this.reviewProvider.addReview(this.navParams.get("taskId"), this.navParams.get("role"), this.navParams.get("taskerId"), this.navParams.get("taskName"), rate, review, this.navParams.get("poster"), this.navParams.get("posterName"));
+      this.reviewProvider.addReview(this.navParams.get("taskId"), this.navParams.get("role"), this.navParams.get("taskerId"), this.navParams.get("taskName"), rate, review, this.navParams.get("poster"));
     }
    
   }

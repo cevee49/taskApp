@@ -19,6 +19,7 @@ export class ChatroomPage {
   public buddy: any =  {};
   public newmessage;
   public allmessages : Array<any>;
+  public userProfile: any;
 
   constructor(
     public navCtrl: NavController, 
@@ -26,12 +27,18 @@ export class ChatroomPage {
     public chatProvider: ChatProvider,
     public profileProvider: ProfileProvider
   ) {
+    this.profileProvider.getUserProfile().on("value", userProfileSnapshot => {
+      this.userProfile= userProfileSnapshot.val();
+      this.userProfile.photo = userProfileSnapshot.val().photo;
+      console.log(userProfileSnapshot.val().photo);
+   });
     this.profileProvider
       .getOtherProfile(this.navParams.get("buddyId"))
       .on("value", buddySnapshot => {
         this.buddy = buddySnapshot.val();
         this.buddy.id = buddySnapshot.key;
-        this.buddy.email = buddySnapshot.val().email;
+        this.buddy.photo = buddySnapshot.val().photo;
+        this.buddy.name = buddySnapshot.val().firstName;
     });
     this.chatProvider.getMessages(this.navParams.get("taskId"), this.navParams.get("buddyId")).on("value", chatSnapshot => {
       this.allmessages = [];
@@ -41,11 +48,13 @@ export class ChatroomPage {
           id: snap.key,
           sender: snap.val().sender,
           message: snap.val().message,
-          timestamp: snap.val().timestamp,
+          timestamp: snap.val().timestamp
+
         });
         return false;
       });
     });
+    this.chatProvider.setRead(this.navParams.get("taskId"), this.navParams.get("buddyId"));
   }
 
   ionViewDidLoad() {

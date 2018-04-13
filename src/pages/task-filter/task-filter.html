@@ -7,15 +7,16 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>taskFilter</ion-title>
+    <ion-title>Filter Task</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <p>TO BE DONE</p>
-    <ion-segment [(ngModel)]="type" >
+
+    <ion-label stacked class="left">To Be Done</ion-label>
+      <ion-segment [(ngModel)]="type" >
         <ion-segment-button value="All">
           All
         </ion-segment-button>
@@ -26,6 +27,7 @@
           Online
           </ion-segment-button>
       </ion-segment>
+
   <ion-item>
     <ion-label stacked>Category</ion-label>
     <ion-select [(ngModel)]="taskCat" interface="popover">
@@ -39,28 +41,32 @@
     placeholder="Any location">
     </ion-input>
   </ion-item>
-  <p>DISTANCE</p>
-  <p item-end>{{distance}}</p>
-  <ion-item>
-    <ion-range min="1" max="6" step="1" [(ngModel)]="range" (ionChange)="showDistance($event)"></ion-range>
-  </ion-item>
-  <p>PRICE RANGE</p>
   <ion-item >
-    <ion-input  [(ngModel)]="min" type="number"
-    placeholder="$ MIN">
-    </ion-input>
+      <ion-label stacked>Distance</ion-label>
+      <p item-end>{{distance}} km</p>
+    <ion-range min="1" max="6" step="1" [(ngModel)]="range" (ionChange)="showDistance($event)" ></ion-range>
   </ion-item>
-  <ion-item >
-    <ion-input  [(ngModel)]="max" type="number"
-    placeholder="$ MAX">
-    </ion-input>
-  </ion-item>
+
+  <ion-label stacked class="left">Price Range</ion-label>
+    <ion-grid>  
+      <ion-row>
+          <ion-col><ion-input  [(ngModel)]="min" type="number"
+            placeholder="$ MIN">
+          
+          </ion-input></ion-col>
+          <ion-col> <ion-input  [(ngModel)]="max" type="number"
+            placeholder="$ MAX">
+            </ion-input></ion-col>
+         
+    </ion-row>
+  </ion-grid>
+  
   <ion-item>
       <ion-label>Hide assigned task</ion-label>
       <ion-toggle [(ngModel)]="hide" ></ion-toggle>
     </ion-item>
   <button ion-button block
     (click)=" applyFilter(taskCat, min, max, type, hide)">
-    Post Task
+    Apply Filter
   </button>
 </ion-content>
